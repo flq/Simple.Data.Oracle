@@ -1,0 +1,14 @@
+obj
+bin
+out
+NDependOut*
+_ReSharper.*
+*.user
+*.resharper
+*.ReSharper
+*.suo
+*.cache
+*.~
+*.swp
+*.nupkg
+Oracle.DataAccess.dll
