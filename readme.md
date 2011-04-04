@@ -1,4 +1,4 @@
-﻿#Oracle.DataAccess
+﻿#Oracle DataAccess
 
 Since the Oracle access dll from Microsoft is pretty much deprecated you should use the ODAC stuff from Oracle. 
 These days it is xcopy deployable and you obtain it here : http://www.oracle.com/technetwork/database/windows/downloads/index.html
@@ -31,6 +31,7 @@ XE =
 </pre>
 
 You can specify your own location for the tnsnames.ora file by 
+
 - firing up regedit, 
 - finding HKLM\Software\Oracle\KEY_Homename, where Homename is the name you provided during installation
 - adding the value TNS_ADMIN = "Path to your tnsnames.ora file"
