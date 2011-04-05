@@ -3,7 +3,7 @@
 namespace Simple.Data.Oracle.Tests
 {
     [TestFixture]
-    public class BasicConnectivity : OracleConnectivityContext
+    internal class BasicConnectivity : OracleConnectivityContext
     {
         [Test]
         public void Basic_connection_to_dual()
@@ -16,6 +16,12 @@ namespace Simple.Data.Oracle.Tests
                 Assert.IsNotNull(d);
                 Assert.AreEqual("X", d.Dummy);
             }
+        }
+
+        [TestFixtureSetUp]
+        public void Given()
+        {
+            CreateDbObject();
         }
     }
 }

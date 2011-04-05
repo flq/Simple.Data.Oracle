@@ -2,15 +2,21 @@
 
 namespace Simple.Data.Oracle.Tests
 {
-    public class OracleConnectivityContext
+    internal class OracleConnectivityContext
     {
         protected dynamic _db;
         protected const string ConnectionString = "Data Source=XE;User id=hr;Password=hr";
 
-        [TestFixtureSetUp]
-        public void Given()
+        protected void CreateDbObject()
         {
             _db = Database.OpenConnection(ConnectionString);
+        }
+
+        protected OracleConnectionProvider ConstructProvider()
+        {
+            var p = new OracleConnectionProvider();
+            p.SetConnectionString(ConnectionString);
+            return p;
         }
     }
 }

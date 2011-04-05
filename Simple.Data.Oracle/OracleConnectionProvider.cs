@@ -16,19 +16,19 @@ namespace Simple.Data.Oracle
             ConnectionString = connectionString;
         }
 
-        public IDbConnection CreateConnection()
+        IDbConnection IConnectionProvider.CreateConnection()
         {
             return CreateOracleConnection();
         }
 
-        public ISchemaProvider GetSchemaProvider()
+        ISchemaProvider IConnectionProvider.GetSchemaProvider()
         {
             return new OracleSchemaProvider(this);
         }
 
         public string GetIdentityFunction()
         {
-            throw new NotSupportedException("Currently unclear what this is used for and what's the best way to support in Oracle");
+            throw new NotSupportedException("Currently unsupported");
         }
 
         public IProcedureExecutor GetProcedureExecutor(AdoAdapter adapter, ObjectName procedureName)
@@ -38,12 +38,12 @@ namespace Simple.Data.Oracle
 
         public string ConnectionString { get; private set; }
 
-        public bool SupportsCompoundStatements
+        bool IConnectionProvider.SupportsCompoundStatements
         {
             get { return false; }
         }
 
-        public bool SupportsStoredProcedures
+        bool IConnectionProvider.SupportsStoredProcedures
         {
             get { return true; }
         }
@@ -51,6 +51,11 @@ namespace Simple.Data.Oracle
         internal OracleConnection CreateOracleConnection()
         {
             return new OracleConnection(ConnectionString);
+        }
+
+        internal string UserOfConnection
+        {
+            get { return ConnectionString != null ? new OracleConnectionStringBuilder(ConnectionString).UserID : null; }
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿#Oracle DataAccess
+﻿
+#Oracle DataAccess
 
 Since the Oracle access dll from Microsoft is pretty much deprecated you should use the ODAC stuff from Oracle. 
 These days it is xcopy deployable and you obtain it here : http://www.oracle.com/technetwork/database/windows/downloads/index.html
