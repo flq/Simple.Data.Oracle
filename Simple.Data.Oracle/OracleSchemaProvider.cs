@@ -2,43 +2,32 @@
 using System.Collections.Generic;
 using Simple.Data.Ado.Schema;
 using System.Data;
+using System.Linq;
 
 namespace Simple.Data.Oracle
 {
     internal class OracleSchemaProvider : ISchemaProvider
     {
         private readonly OracleConnectionProvider _connectionProvider;
+        private readonly SqlReflection _sqlReflection;
 
         public OracleSchemaProvider(OracleConnectionProvider connectionProvider)
         {
             _connectionProvider = connectionProvider;
+            _sqlReflection = new SqlReflection(connectionProvider);
             //http://www.devart.com/dotconnect/oracle/docs/DataTypeMapping.html
         }
 
         public IEnumerable<Table> GetTables()
         {
-            yield return new Table("DUAL", null, TableType.Table);
+            return _sqlReflection.UserTables().AsEnumerable();
 
-            //using (var cn = _connectionProvider.CreateOracleConnection())
-            //{
-            //    var command = cn.CreateCommand();
-            //    command.CommandType = CommandType.Text;
-            //    //TODO: Get Tables and Views + Schema
-            //    command.CommandText = "ECHO DELTA";
-            //    cn.Open();
-            //    using (var reader = command.ExecuteReader())
-            //    {
-            //        while (reader.Read())
-            //            yield return new Table(reader[0].ToString(), null, TableType.Table);
-            //    }
-
-            //}
         }
 
         public IEnumerable<Column> GetColumns(Table table)
         {
-            //new Column()
-            throw new NotImplementedException();
+            return _sqlReflection.Columns(table);
+
         }
 
         public IEnumerable<Procedure> GetStoredProcedures()
@@ -55,7 +44,9 @@ namespace Simple.Data.Oracle
 
         public Key GetPrimaryKey(Table table)
         {
-            throw new NotImplementedException();
+            return new Key(
+                _sqlReflection.PrimaryKeys.Where(t => t.Item1.InvariantEquals(table.ActualName))
+                    .Select(t => t.Item2));
         }
 
         public IEnumerable<ForeignKey> GetForeignKeys(Table table)

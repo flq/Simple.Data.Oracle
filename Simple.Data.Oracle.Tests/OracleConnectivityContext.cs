@@ -18,5 +18,10 @@ namespace Simple.Data.Oracle.Tests
             p.SetConnectionString(ConnectionString);
             return p;
         }
+
+        protected SqlReflection GetSqlReflection()
+        {
+            return new SqlReflection(ConstructProvider());
+        }
     }
 }

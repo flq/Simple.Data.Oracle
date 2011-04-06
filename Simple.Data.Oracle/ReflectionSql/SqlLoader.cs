@@ -9,6 +9,16 @@ namespace Simple.Data.Oracle.ReflectionSql
             get { return LoadFile("user_tables_views.txt"); }
         }
 
+        public static string UserColumns
+        {
+            get { return LoadFile("user_columns.txt"); }
+        }
+
+        public static string PrimaryKeys
+        {
+            get { return LoadFile("table_pks.txt"); }
+        }
+
         private static Stream GetStream(string name)
         {
             return typeof(SqlLoader).Assembly

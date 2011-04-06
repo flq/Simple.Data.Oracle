@@ -51,12 +51,18 @@
     <Compile Include="OracleConnectionProvider.cs" />
     <Compile Include="OracleSchemaProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ProviderExtensions.cs" />
+    <Compile Include="SqlReflectExtensions.cs" />
     <Compile Include="ReflectionSql\SqlLoader.cs" />
     <Compile Include="SqlReflection.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="ReflectionSql\user_tables_views.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="ReflectionSql\user_columns.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="ReflectionSql\table_pks.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
