@@ -21,7 +21,7 @@ namespace Simple.Data.Oracle.Tests
         [TestFixtureSetUp]
         public void Given()
         {
-            CreateDbObject();
+            InitDynamicDB();
         }
     }
 }

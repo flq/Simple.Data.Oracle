@@ -55,7 +55,7 @@ namespace Simple.Data.Oracle
 
         internal string UserOfConnection
         {
-            get { return ConnectionString != null ? new OracleConnectionStringBuilder(ConnectionString).UserID : null; }
+            get { return ConnectionString != null ? new OracleConnectionStringBuilder(ConnectionString).UserID.ToUpperInvariant() : null; }
         }
     }
 }

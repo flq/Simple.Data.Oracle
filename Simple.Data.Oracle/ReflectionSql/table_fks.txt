@@ -1,0 +1,10 @@
+﻿select con.table_name as fk_table, con.column_name as fk_column,
+       rel.table_name as pk_table, rel.column_name as pk_column
+from user_cons_columns con 
+    join user_constraints cc 
+      on con.constraint_name = cc.constraint_name
+    join user_cons_columns rel 
+      on cc.r_constraint_name = rel.constraint_name 
+     and con.position = rel.position
+where
+    cc.constraint_type = 'R'

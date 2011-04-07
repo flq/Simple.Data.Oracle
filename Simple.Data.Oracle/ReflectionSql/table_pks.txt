@@ -1,7 +1,8 @@
-﻿SELECT cols.table_name, cols.column_name, cols.position, cons.status, cons.owner
-FROM all_constraints cons, all_cons_columns cols
-WHERE cons.constraint_type = 'P'
-AND cons.owner = :1
-AND cons.constraint_name = cols.constraint_name
-AND cons.owner = cols.owner
-ORDER BY cols.table_name, cols.position
+﻿SELECT b.table_name, b.column_name, b.position, a.status, a.owner
+FROM all_constraints a
+inner join all_cons_columns b
+on a.owner = b.owner
+and a.constraint_name = b.constraint_name
+WHERE a.constraint_type = 'P'
+AND a.owner = :1
+ORDER BY b.table_name, b.position

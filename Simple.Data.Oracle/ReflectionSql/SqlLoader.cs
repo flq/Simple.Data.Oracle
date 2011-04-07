@@ -19,10 +19,9 @@ namespace Simple.Data.Oracle.ReflectionSql
             get { return LoadFile("table_pks.txt"); }
         }
 
-        private static Stream GetStream(string name)
+        public static string ForeignKeys
         {
-            return typeof(SqlLoader).Assembly
-              .GetManifestResourceStream(typeof(SqlLoader), name);
+            get { return LoadFile("table_fks.txt"); }
         }
 
         private static string LoadFile(string name)
@@ -30,6 +29,12 @@ namespace Simple.Data.Oracle.ReflectionSql
             Stream stream = GetStream(name);
             var sr = new StreamReader(stream);
             return sr.ReadToEnd();
+        }
+
+        private static Stream GetStream(string name)
+        {
+            return typeof(SqlLoader).Assembly
+                .GetManifestResourceStream(typeof(SqlLoader), name);
         }
     }
 }

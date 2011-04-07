@@ -1,33 +1,40 @@
 ﻿using System;
 using System.Collections.Generic;
 using Simple.Data.Ado.Schema;
-using System.Data;
 using System.Linq;
 
 namespace Simple.Data.Oracle
 {
     internal class OracleSchemaProvider : ISchemaProvider
     {
-        private readonly OracleConnectionProvider _connectionProvider;
         private readonly SqlReflection _sqlReflection;
 
         public OracleSchemaProvider(OracleConnectionProvider connectionProvider)
         {
-            _connectionProvider = connectionProvider;
             _sqlReflection = new SqlReflection(connectionProvider);
             //http://www.devart.com/dotconnect/oracle/docs/DataTypeMapping.html
         }
 
         public IEnumerable<Table> GetTables()
         {
-            return _sqlReflection.UserTables().AsEnumerable();
-
+            return _sqlReflection.Tables.AsEnumerable();
         }
 
         public IEnumerable<Column> GetColumns(Table table)
         {
-            return _sqlReflection.Columns(table);
+            return _sqlReflection.Columns
+                .Where(c => table.ActualName.InvariantEquals(c.Item1))
+                .Select(c => new Column(c.Item2, table));
+        }
 
+        public Key GetPrimaryKey(Table table)
+        {
+            return new Key(_sqlReflection.PrimaryKeys.Where(t => t.Item1.InvariantEquals(table.ActualName)).Select(t => t.Item2));
+        }
+
+        public IEnumerable<ForeignKey> GetForeignKeys(Table table)
+        {
+            return _sqlReflection.ForeignKeys.Where(fk => fk.DetailTable.Name.InvariantEquals(table.ActualName));
         }
 
         public IEnumerable<Procedure> GetStoredProcedures()
@@ -42,18 +49,6 @@ namespace Simple.Data.Oracle
             throw new NotImplementedException();
         }
 
-        public Key GetPrimaryKey(Table table)
-        {
-            return new Key(
-                _sqlReflection.PrimaryKeys.Where(t => t.Item1.InvariantEquals(table.ActualName))
-                    .Select(t => t.Item2));
-        }
-
-        public IEnumerable<ForeignKey> GetForeignKeys(Table table)
-        {
-            throw new NotImplementedException();
-        }
-
         public string QuoteObjectName(string unquotedName)
         {
             return string.Format("\"{0}\"", unquotedName);
@@ -61,7 +56,9 @@ namespace Simple.Data.Oracle
 
         public string NameParameter(string baseName)
         {
-            throw new NotImplementedException();
+            if (string.IsNullOrWhiteSpace(baseName))
+                throw new ArgumentException("baseName is not set.");
+            return (baseName.StartsWith(":")) ? baseName : ":" + baseName;
         }
     }
 }
