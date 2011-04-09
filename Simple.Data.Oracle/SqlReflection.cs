@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Threading.Tasks;
 using Simple.Data.Ado;
 using Simple.Data.Ado.Schema;
@@ -18,6 +19,8 @@ namespace Simple.Data.Oracle
         private List<Tuple<string,string>> _columnsFlat;
         private List<Tuple<string, string>> _pks;
         private IEnumerable<ForeignKey> _fks;
+        private List<Procedure> _procs;
+        private List<Tuple<string, string, Type, ParameterDirection>> _args;
 
         public SqlReflection(OracleConnectionProvider provider)
         {
@@ -63,12 +66,32 @@ namespace Simple.Data.Oracle
             }
         }
 
+        public IEnumerable<Procedure> Procedures
+        {
+            get
+            {
+                _buildData.Wait();
+                return _procs;
+            }
+        }
+
+        public List<Tuple<string, string, Type, ParameterDirection>> ProcedureArguments
+        {
+            get
+            {
+                _buildData.Wait();
+                return _args;
+            }
+        }
+
         private void BuildData()
         {
             CreateTables();
             CreateColumns();
             CreatePrimaryKeys();
             CreateForeignKeys();
+            CreateProcedures();
+            CreateProcedureArguments();
         }
 
         private void CreatePrimaryKeys()
@@ -81,12 +104,12 @@ namespace Simple.Data.Oracle
 
         private void CreateColumns()
         {
-            _columnsFlat = _provider.ReaderFrom(SqlLoader.UserColumns, r => Tuple.Create(r[0].ToString(), r[1].ToString())).ToList();
+            _columnsFlat = _provider.ReaderFrom(SqlLoader.UserColumns, r => Tuple.Create(r.GetString(0), r.GetString(1))).ToList();
         }
 
         private void CreateTables()
         {
-            _tables = _provider.ReaderFrom(SqlLoader.UserTablesAndViews, r => new Table(r[0].ToString(), _schema, TypeFromData(r[1].ToString())))
+            _tables = _provider.ReaderFrom(SqlLoader.UserTablesAndViews, r => new Table(r.GetString(0), _schema, r.GetString(1).TypeFromData()))
                 .ToList();
             _tables.Add(new Table("DUAL", null, TableType.Table));
         }
@@ -102,14 +125,14 @@ namespace Simple.Data.Oracle
                              PkColumnName = r.GetString(3).ToUpperInvariant()
                          });
 
-            _fks = from fk in foreignKeys
+            _fks = (from fk in foreignKeys
                          group fk by new {fk.FkTableName, fk.PkTableName}
                          into tableGrouping
                          let fks = tableGrouping.Select(z => z.FkColumnName)
                          let pks = tableGrouping.Select(z => z.PkColumnName)
                          select
                              new ForeignKey(ObjectNameFrom(tableGrouping.Key.FkTableName), fks,
-                                            ObjectNameFrom(tableGrouping.Key.PkTableName), pks);
+                                            ObjectNameFrom(tableGrouping.Key.PkTableName), pks)).ToList();
         }
 
         private ObjectName ObjectNameFrom(string tableName)
@@ -117,13 +140,32 @@ namespace Simple.Data.Oracle
             return new ObjectName(_schema, tableName);
         }
 
-        private static TableType TypeFromData(string type)
+        private void CreateProcedures()
         {
-            if (type.Equals("view", StringComparison.InvariantCultureIgnoreCase))
-                return TableType.View;
-            if (type.Equals("table", StringComparison.InvariantCultureIgnoreCase))
-                return TableType.Table;
-            throw new InvalidOperationException("Bad type provided: " + type);
+            var procedures = _provider.ReaderFrom(SqlLoader.Procedures, 
+                r => r.GetString(0) + (r.IsDBNull(1) ? "" : "." + r.GetString(1)));
+
+            _procs = (from p in procedures select new Procedure(p, p, _schema)).ToList();
+        }
+
+        private void CreateProcedureArguments()
+        {
+            var args = _provider.ReaderFrom(SqlLoader.ProcedureArguments,
+                                            c => c.Parameters.Add("1", _schema.ToUpperInvariant()),
+                                            r => new
+                                                     {
+                                                         ObjectName = (r.IsDBNull(1) ? "" : r.GetString(1) + ".") + r.GetString(0),
+                                                         ArgumentName = r.IsDBNull(2) ? null : r.GetString(2),
+                                                         DataType = r.GetString(3),
+                                                         Direction = r.GetString(4)
+                                                     });
+            
+            // For return values, argument name is null
+            _args = (from a in args
+                    let type = a.DataType.ToClrType()
+                    let direction = a.Direction.ToParameterDirection(a.ArgumentName == null)
+                    select Tuple.Create(a.ObjectName, a.ArgumentName ?? "RETURN",  type, direction)).ToList();
+
         }
     }
 }

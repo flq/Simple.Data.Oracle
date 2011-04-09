@@ -21,7 +21,7 @@ namespace Simple.Data.Oracle
             return CreateOracleConnection();
         }
 
-        ISchemaProvider IConnectionProvider.GetSchemaProvider()
+        public ISchemaProvider GetSchemaProvider()
         {
             return new OracleSchemaProvider(this);
         }
@@ -33,7 +33,8 @@ namespace Simple.Data.Oracle
 
         public IProcedureExecutor GetProcedureExecutor(AdoAdapter adapter, ObjectName procedureName)
         {
-            throw new NotImplementedException();
+            procedureName = new ObjectName(UserOfConnection.ToUpperInvariant(), procedureName.Name);
+            return new OracleProcedureExecutor(this, procedureName);
         }
 
         public string ConnectionString { get; private set; }

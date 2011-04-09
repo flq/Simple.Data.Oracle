@@ -28,7 +28,7 @@ namespace Simple.Data.Oracle.Tests
         {
             try
             {
-                IEnumerable<dynamic> employees = _db.Employees.Find(_db.Employees.Jobs.Min_Salary == 20000);
+                IEnumerable<dynamic> employees = _db.Employees.FindAll(_db.Employees.Jobs.Min_Salary == 20000);
                 Assert.AreEqual(1, employees.Count());
             }
             catch (MissingMethodException x)

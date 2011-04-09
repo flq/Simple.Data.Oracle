@@ -1,0 +1,2 @@
+﻿select OBJECT_NAME,PROCEDURE_NAME 
+from user_procedures

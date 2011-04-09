@@ -51,6 +51,7 @@
     <Compile Include="Dual.cs" />
     <Compile Include="ExploratoryTesting.cs" />
     <Compile Include="OracleConnectivityContext.cs" />
+    <Compile Include="ProcedureTesting.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ObtainingTableMetadata.cs" />
   </ItemGroup>

@@ -39,14 +39,15 @@ namespace Simple.Data.Oracle
 
         public IEnumerable<Procedure> GetStoredProcedures()
         {
-            //new Procedure()
-            throw new NotImplementedException();
+            return _sqlReflection.Procedures;
         }
 
         public IEnumerable<Parameter> GetParameters(Procedure storedProcedure)
         {
-            
-            throw new NotImplementedException();
+            var parameters = _sqlReflection.ProcedureArguments
+                .Where(p => p.Item1.InvariantEquals(storedProcedure.Name))
+                .Select(p => new Parameter(p.Item2, p.Item3, p.Item4));
+            return parameters;
         }
 
         public string QuoteObjectName(string unquotedName)

@@ -38,6 +38,14 @@ namespace Simple.Data.Oracle.Tests
         }
 
         [Test]
+        public void found_columns_to_view()
+        {
+            var table = TableByName("EMP_DETAILS_VIEW");
+            var cols = _sql.GetColumns(table).ToList();
+            Assert.That(cols, Has.Count.EqualTo(16));
+        }
+
+        [Test]
         public void identifies_primary_key()
         {
             var table = TableByName("COUNTRIES");

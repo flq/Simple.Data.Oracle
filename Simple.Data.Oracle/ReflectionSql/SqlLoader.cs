@@ -24,6 +24,16 @@ namespace Simple.Data.Oracle.ReflectionSql
             get { return LoadFile("table_fks.txt"); }
         }
 
+        public static string Procedures
+        {
+            get { return LoadFile("procedures.txt"); }
+        }
+
+        public static string ProcedureArguments
+        {
+            get { return LoadFile("procedure_args.txt"); }
+        }
+
         private static string LoadFile(string name)
         {
             Stream stream = GetStream(name);
