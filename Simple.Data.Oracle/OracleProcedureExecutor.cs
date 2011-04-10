@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
@@ -37,12 +38,14 @@ namespace Simple.Data.Oracle
             using (var cn = _connectionProvider.CreateOracleConnection())
             using (var command = cn.CreateCommand())
             {
-                command.CommandText = _schema.QuoteObjectName(procedure.Name);
+                // Double-underscore is used to denote a package name
+                command.CommandText = ResolvePackageCallAndQuote(procedure);
                 command.CommandType = CommandType.StoredProcedure;
                 SetParameters(procedure, command, suppliedParameters);
                 try
                 {
                     var result = _executeImpl(command);
+                    suppliedParameters["__ReturnValue"] = command.GetReturnValue();
                     //TODO: Handle Output values
                     //RetrieveOutputParameterValues(procedure, command, suppliedParameters);
                     return result;
@@ -54,6 +57,18 @@ namespace Simple.Data.Oracle
             }
         }
 
+        private string ResolvePackageCallAndQuote(Procedure procedure)
+        {
+            var parts = procedure.Name.Split(new [] {"__"}, StringSplitOptions.RemoveEmptyEntries);
+
+            if (parts.Length == 1)
+                return _schema.QuoteObjectName(parts[0]);
+            if (parts.Length == 2)
+                return parts[0] + "." + parts[1];
+
+            throw new InvalidOperationException("Strange state of application around getting the right procedure name");
+        }
+
         public IEnumerable<ResultSet> ExecuteReader(IDbCommand command)
         {
             command.WriteTrace();
@@ -61,7 +76,6 @@ namespace Simple.Data.Oracle
 
             using (var reader = command.ExecuteReader())
             {
-                //TODO: ExecuteReader won't cut it for a proc with return val, need to extract the return value parameter
                 if (reader.FieldCount > 0)
                 {
                     return reader.ToMultipleDictionaries();
@@ -94,7 +108,7 @@ namespace Simple.Data.Oracle
             foreach (var parameter in procedure.InputParameters())
             {
                 object value;
-                if (!suppliedParameters.TryGetValue(parameter.Name.Replace("@", ""), out value))
+                if (!suppliedParameters.TryGetValue(parameter.Name.Replace(":", ""), out value))
                 {
                     suppliedParameters.TryGetValue("_" + i, out value);
                 }

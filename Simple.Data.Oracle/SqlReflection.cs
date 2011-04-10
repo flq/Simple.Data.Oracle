@@ -143,7 +143,7 @@ namespace Simple.Data.Oracle
         private void CreateProcedures()
         {
             var procedures = _provider.ReaderFrom(SqlLoader.Procedures, 
-                r => r.GetString(0) + (r.IsDBNull(1) ? "" : "." + r.GetString(1)));
+                r => r.GetString(0) + (r.IsDBNull(1) ? "" : "__" + r.GetString(1)));
 
             _procs = (from p in procedures select new Procedure(p, p, _schema)).ToList();
         }
@@ -154,7 +154,7 @@ namespace Simple.Data.Oracle
                                             c => c.Parameters.Add("1", _schema.ToUpperInvariant()),
                                             r => new
                                                      {
-                                                         ObjectName = (r.IsDBNull(1) ? "" : r.GetString(1) + ".") + r.GetString(0),
+                                                         ObjectName = (r.IsDBNull(1) ? "" : r.GetString(1) + "__") + r.GetString(0),
                                                          ArgumentName = r.IsDBNull(2) ? null : r.GetString(2),
                                                          DataType = r.GetString(3),
                                                          Direction = r.GetString(4)
@@ -164,7 +164,7 @@ namespace Simple.Data.Oracle
             _args = (from a in args
                     let type = a.DataType.ToClrType()
                     let direction = a.Direction.ToParameterDirection(a.ArgumentName == null)
-                    select Tuple.Create(a.ObjectName, a.ArgumentName ?? "RETURN",  type, direction)).ToList();
+                    select Tuple.Create(a.ObjectName, a.ArgumentName ?? "__ReturnValue",  type, direction)).ToList();
 
         }
     }

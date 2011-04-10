@@ -16,6 +16,18 @@ namespace Simple.Data.Oracle
                                                                    { "DATE", typeof(DateTime) }
                                                                };
 
+        public static object ReturnValueDefault(this Procedure proc)
+        {
+            var retArg = proc.Parameters.First(p => p.Direction == ParameterDirection.ReturnValue);
+            if (retArg.Type == typeof (string))
+                return "A";
+            if (retArg.Type == typeof(decimal))
+                return 10m;
+            if (retArg.Type == typeof(DateTime))
+                return DateTime.MinValue;
+            throw new ArgumentException("Lost in assigning a default value for return value type " + retArg.Type.Name);
+        }
+
         public static TableType TypeFromData(this string type)
         {
             if (type.Equals("view", StringComparison.InvariantCultureIgnoreCase))
@@ -30,16 +42,10 @@ namespace Simple.Data.Oracle
             return proc.Parameters.Any(p => p.Direction == ParameterDirection.ReturnValue);
         }
 
-        public static object ReturnValueDefault(this Procedure proc)
+        public static object GetReturnValue(this OracleCommand cmd)
         {
-            var retArg = proc.Parameters.First(p => p.Direction == ParameterDirection.ReturnValue);
-            if (retArg.Type == typeof (string))
-              return "A";
-            if (retArg.Type == typeof(decimal))
-                return 10d;
-            if (retArg.Type == typeof(DateTime))
-                return DateTime.MinValue;
-            throw new ArgumentException("Lost in assigning a default value for return value type " + retArg.Type.Name);
+            var param = cmd.Parameters.OfType<OracleParameter>().FirstOrDefault(p => p.Direction == ParameterDirection.ReturnValue);
+            return param != null ? param.Value : null;
         }
 
         public static IEnumerable<Parameter> InputParameters(this Procedure proc)
