@@ -146,3 +146,55 @@ WHERE e.department_id = d.department_id
   AND j.job_id = e.job_id
 WITH READ ONLY
 /
+create or replace function EMPLOYEE_COUNT_BY_JOB(P_JOB IN VARCHAR) return number is
+  Result NUMBER;
+begin
+  select COUNT(*) INTO Result FROM EMPLOYEES e
+  INNER JOIN JOBS j on e.job_id = j.job_id
+  WHERE j.job_title = P_JOB;
+  return(Result);
+end EMPLOYEE_COUNT_BY_JOB;
+/
+create or replace function EMPLOYEE_COUNT_DEPARTMENT(P_DEP IN VARCHAR) return number is
+  Result NUMBER;
+begin
+  select COUNT(*) INTO Result FROM EMPLOYEES e
+  INNER JOIN DEPARTMENTS d on e.department_id = d.department_id
+  WHERE d.department_name = P_DEP;
+  return(Result);
+end EMPLOYEE_COUNT_DEPARTMENT;
+/
+create or replace package Department is
+
+  function DEPARTMENT_COUNT return NUMBER;
+  function MANAGER_OF_DEPARTMENT(P_DEPARTMENT_NAME IN VARCHAR) return VARCHAR;
+
+  procedure MANAGER_AND_COUNT(P_DEPARTMENT IN VARCHAR, P_MANAGER OUT VARCHAR, P_COUNT OUT NUMBER);
+end Department;
+/
+create or replace package body Department is
+
+  function DEPARTMENT_COUNT return NUMBER is
+    Return NUMBER;
+  begin
+    Select count(*) into Return from departments;
+    return(Return);
+  end;
+  
+  function MANAGER_OF_DEPARTMENT(P_DEPARTMENT_NAME IN VARCHAR) return VARCHAR is
+    Return VARCHAR(25);
+  begin
+    Select e.LAST_NAME into Return from
+    DEPARTMENTS d
+    JOIN EMPLOYEES e on e.employee_id = d.manager_id
+    WHERE d.department_name = P_DEPARTMENT_NAME;
+    return(Return);
+  end;
+  
+  procedure MANAGER_AND_COUNT(P_DEPARTMENT IN VARCHAR, P_MANAGER OUT VARCHAR, P_COUNT OUT NUMBER) is
+  begin
+    P_MANAGER := 'Jones from ' || P_DEPARTMENT;
+    P_COUNT := 10;
+  end;
+   
+end Department;
