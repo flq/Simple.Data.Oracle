@@ -164,7 +164,7 @@ namespace Simple.Data.Oracle
             _args = (from a in args
                     let type = a.DataType.ToClrType()
                     let direction = a.Direction.ToParameterDirection(a.ArgumentName == null)
-                    select Tuple.Create(a.ObjectName, a.ArgumentName ?? "__ReturnValue",  type, direction)).ToList();
+                     select Tuple.Create(a.ObjectName, a.ArgumentName ?? "__ReturnValue", type, direction)).ToList();
 
         }
     }

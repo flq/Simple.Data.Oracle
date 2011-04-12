@@ -46,8 +46,7 @@ namespace Simple.Data.Oracle
                 {
                     var result = _executeImpl(command);
                     suppliedParameters["__ReturnValue"] = command.GetReturnValue();
-                    //TODO: Handle Output values
-                    //RetrieveOutputParameterValues(procedure, command, suppliedParameters);
+                    RetrieveOutputParameters(command.Parameters, suppliedParameters);
                     return result;
                 }
                 catch (DbException ex)
@@ -55,18 +54,6 @@ namespace Simple.Data.Oracle
                     throw new AdoAdapterException(ex.Message, command);
                 }
             }
-        }
-
-        private string ResolvePackageCallAndQuote(Procedure procedure)
-        {
-            var parts = procedure.Name.Split(new [] {"__"}, StringSplitOptions.RemoveEmptyEntries);
-
-            if (parts.Length == 1)
-                return _schema.QuoteObjectName(parts[0]);
-            if (parts.Length == 2)
-                return parts[0] + "." + parts[1];
-
-            throw new InvalidOperationException("Strange state of application around getting the right procedure name");
         }
 
         public IEnumerable<ResultSet> ExecuteReader(IDbCommand command)
@@ -87,6 +74,18 @@ namespace Simple.Data.Oracle
             }
         }
 
+        private string ResolvePackageCallAndQuote(Procedure procedure)
+        {
+            var parts = procedure.Name.Split(new [] {"__"}, StringSplitOptions.RemoveEmptyEntries);
+
+            if (parts.Length == 1)
+                return _schema.QuoteObjectName(parts[0]);
+            if (parts.Length == 2)
+                return parts[0] + "." + parts[1];
+
+            throw new InvalidOperationException("Strange state of application around getting the right procedure name");
+        }
+
         private static IEnumerable<ResultSet> ExecuteNonQuery(IDbCommand command)
         {
             command.WriteTrace();
@@ -100,35 +99,33 @@ namespace Simple.Data.Oracle
         {
             int i = 0;
 
-            if (procedure.HasReturnValue())
+            foreach (var parameter in procedure.Parameters)
             {
-                cmd.Parameters.Add(CreateReturnParameter(cmd.CreateParameter(), procedure.ReturnValueDefault()));
-            }
-
-            foreach (var parameter in procedure.InputParameters())
-            {
-                object value;
-                if (!suppliedParameters.TryGetValue(parameter.Name.Replace(":", ""), out value))
+                if (parameter.IsReturnOrOutput())
                 {
-                    suppliedParameters.TryGetValue("_" + i, out value);
+                    var p = cmd.CreateParameter();
+                    p.ConfigureOutputParameterFromArgument(parameter);
+                    cmd.Parameters.Add(p);
                 }
-                cmd.Parameters.Add(parameter.Name, value);
-                i++;
+                else
+                {
+                    object value;
+                    suppliedParameters.TryGetValue("_" + i, out value);
+                    cmd.Parameters.Add(parameter.Name, value);
+                    i++;
+                }
             }
+
         }
 
-        /// <summary>
-        /// http://forums.asp.net/t/791115.aspx/1?ODP+NET+Function+call+with+VARCHAR2+return+value+cause+ERROR
-        /// It causes an error to keep a the return value parameter with value null. Hence we pass in a 
-        /// value that corresponds to the type of the return parameter.
-        /// </summary>
-        private static OracleParameter CreateReturnParameter(OracleParameter returnParam, object defaultValue)
+        private static void RetrieveOutputParameters(OracleParameterCollection parameters, IDictionary<string, object> suppliedParameters)
         {
-            returnParam.ParameterName = "__RETVAL";
-            returnParam.Direction = ParameterDirection.ReturnValue;
-            returnParam.Value = defaultValue;
-            return returnParam;
-
+            var output = from p in parameters.OfType<OracleParameter>()
+                         where p.Direction == ParameterDirection.Output
+                         select new {p.ParameterName, p.Value};
+            foreach (var o in output)
+                suppliedParameters[o.ParameterName] = o.Value;
         }
+
     }
 }
