@@ -24,7 +24,7 @@ namespace Simple.Data.Oracle
         {
             return _sqlReflection.Columns
                 .Where(c => table.ActualName.InvariantEquals(c.Item1))
-                .Select(c => new Column(c.Item2, table));
+                .Select(c => new Column(c.Item2, table, false));
         }
 
         public Key GetPrimaryKey(Table table)

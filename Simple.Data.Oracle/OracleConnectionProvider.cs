@@ -28,7 +28,7 @@ namespace Simple.Data.Oracle
 
         public string GetIdentityFunction()
         {
-            throw new NotSupportedException("Currently unsupported");
+            return "ROWID";
         }
 
         public IProcedureExecutor GetProcedureExecutor(AdoAdapter adapter, ObjectName procedureName)
