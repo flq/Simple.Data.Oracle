@@ -16,7 +16,7 @@ namespace Simple.Data.Oracle
         private readonly Task _buildData;
         
         private List<Table> _tables;
-        private List<Tuple<string,string>> _columnsFlat;
+        private List<Tuple<string,string,DbType,int>> _columnsFlat;
         private List<Tuple<string, string>> _pks;
         private IEnumerable<ForeignKey> _fks;
         private List<Procedure> _procs;
@@ -48,7 +48,7 @@ namespace Simple.Data.Oracle
             }
         }
 
-        public IEnumerable<Tuple<string,string>> Columns
+        public IEnumerable<Tuple<string,string,DbType,int>> Columns
         {
             get
             {
@@ -104,7 +104,13 @@ namespace Simple.Data.Oracle
 
         private void CreateColumns()
         {
-            _columnsFlat = _provider.ReaderFrom(SqlLoader.UserColumns, r => Tuple.Create(r.GetString(0), r.GetString(1))).ToList();
+            _columnsFlat = _provider.ReaderFrom(SqlLoader.UserColumns, 
+                r => Tuple.Create(
+                    r.GetString(0), 
+                    r.GetString(1), 
+                    DbTypeConverter.FromDataType(r.GetString(2)),
+                    Convert.ToInt32(r.GetDecimal(3))))
+                .ToList();
         }
 
         private void CreateTables()

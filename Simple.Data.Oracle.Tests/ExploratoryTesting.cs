@@ -17,7 +17,7 @@ namespace Simple.Data.Oracle.Tests
         [Test]
         public void employee_by_name()
         {
-            IEnumerable<dynamic> emps = _db.Employees.FindAllByFirstNameAndLastName("Steven", "King");
+            IEnumerable<dynamic> emps = _db.Employees.FindAllByFirstNameAndLastName("Steven", "King").OfType<dynamic>();
             Assert.AreEqual(1, emps.Count());
             var emp = emps.First();
             Assert.AreEqual("SKING", emp.Email);
@@ -28,7 +28,7 @@ namespace Simple.Data.Oracle.Tests
         {
             try
             {
-                IEnumerable<dynamic> employees = _db.Employees.FindAll(_db.Employees.Jobs.MinSalary == 20000);
+                IEnumerable<dynamic> employees = _db.Employees.FindAll(_db.Employees.Jobs.MinSalary == 20000).OfType<dynamic>();
                 Assert.AreEqual(1, employees.Count());
             }
             catch (MissingMethodException x)

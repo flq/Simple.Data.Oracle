@@ -12,7 +12,7 @@
     <tags>oracle database data ado .net40</tags>
     <language>en-us</language>
     <dependencies>
-      <dependency id="Simple.Data.Core" version="0.5.5" />
+      <dependency id="Simple.Data.Core" version="0.6.3" />
     </dependencies>
   </metadata>
 </package>

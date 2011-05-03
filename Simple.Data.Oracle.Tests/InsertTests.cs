@@ -44,6 +44,16 @@ namespace Simple.Data.Oracle.Tests
         }
 
         [Test]
+        public void update_all_works_correctly()
+        {
+            InsertRegion();
+            _db.Regions.UpdateAll(_db.Regions.RegionId >= 5, RegionName: "Southern Germany");
+            var r = (Region)_db.Regions.FindByRegionId(5);
+            Assert.IsNotNull(r);
+            Assert.AreEqual("Southern Germany", r.RegionName);
+        }
+
+        [Test]
         public void transaction_works_correctly()
         {
             using (var tx = _db.BeginTransaction())
@@ -54,7 +64,7 @@ namespace Simple.Data.Oracle.Tests
                 Assert.AreEqual("Awesomnia", r.RegionName);
             }
 
-            var rgn = (Region)_db.Regions.FindByRegionId(5);
+            var rgn = _db.Regions.FindByRegionId(5);
             Assert.IsNull(rgn);
         }
 

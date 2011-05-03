@@ -2,24 +2,21 @@
 
 namespace Simple.Data.Oracle.Tests
 {
-    public class Dual
-    {
-        public string Dummy { get; set; }
-    }
 
     [TestFixture]
     internal class BasicConnectivity : OracleConnectivityContext
     {
         [Test]
-        public void Basic_connection_to_dual()
+        public void Basic_connection_to_region()
         {
             Assert.IsNotNull(_db);
-            var dual = _db.Dual.All();
-            Assert.IsNotNull(dual);
-            foreach (Dual d in dual)
+            var regions = _db.Regions.All().ToList<Region>();
+            Assert.IsNotNull(regions);
+            foreach (Region r in regions)
             {
-                Assert.IsNotNull(d);
-                Assert.AreEqual("X", d.Dummy);
+                Assert.IsNotNull(r);
+                Assert.IsNotNull(r.RegionId);
+                
             }
         }
 

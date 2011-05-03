@@ -12,7 +12,6 @@ namespace Simple.Data.Oracle
         public OracleSchemaProvider(OracleConnectionProvider connectionProvider)
         {
             _sqlReflection = new SqlReflection(connectionProvider);
-            //http://www.devart.com/dotconnect/oracle/docs/DataTypeMapping.html
         }
 
         public IEnumerable<Table> GetTables()
@@ -24,7 +23,7 @@ namespace Simple.Data.Oracle
         {
             return _sqlReflection.Columns
                 .Where(c => table.ActualName.InvariantEquals(c.Item1))
-                .Select(c => new Column(c.Item2, table, false));
+                .Select(c => new Column(c.Item2, table, false, c.Item3, c.Item4));
         }
 
         public Key GetPrimaryKey(Table table)

@@ -38,6 +38,15 @@ namespace Simple.Data.Oracle.Tests
         }
 
         [Test]
+        public void found_columns_to_employees()
+        {
+            var table = TableByName("EMPLOYEES");
+            var cols = _sql.GetColumns(table).ToList();
+            Assert.That(cols, Has.Count.EqualTo(11));
+            Assert.AreEqual("JOB_ID", cols[6].ActualName);
+        }
+
+        [Test]
         public void found_columns_to_view()
         {
             var table = TableByName("EMP_DETAILS_VIEW");
