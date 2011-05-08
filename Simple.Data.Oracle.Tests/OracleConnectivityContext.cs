@@ -1,4 +1,6 @@
-﻿using NUnit.Framework;
+﻿using System.Data;
+using NUnit.Framework;
+using Oracle.DataAccess.Client;
 using Simple.Data.Ado.Schema;
 using System.Collections.Generic;
 using System.Linq;
@@ -39,6 +41,13 @@ namespace Simple.Data.Oracle.Tests
             var schemaProvider = new OracleSchemaProvider(GetConnectionProvider());
             Tables = schemaProvider.GetTables().ToList();
             return schemaProvider;
+        }
+
+        protected OracleCommand GetCommand(string text)
+        {
+            var con = new OracleConnection(ConnectionString);
+            var c = new OracleCommand(text, con);
+            return c;
         }
     }
 }
