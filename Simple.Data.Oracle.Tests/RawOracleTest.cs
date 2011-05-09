@@ -1,6 +1,8 @@
 using System;
 using System.Data;
+using System.Diagnostics;
 using NUnit.Framework;
+using Oracle.DataAccess.Client;
 
 namespace Simple.Data.Oracle.Tests
 {
@@ -21,7 +23,7 @@ namespace Simple.Data.Oracle.Tests
         [Test]
         public void check_of_returning_statement()
         {
-            var sql = "insert into regions (region_id, region_name) values (6, 'Antarctica') returning region_id, region_name, create_date into :p1, :p2, :p3";
+            var sql = @"insert into regions (region_id, region_name) values (6, 'Antarctica') returning ""REGION_ID"", ""REGION_NAME"", ""CREATE_DATE"" into :p1, :p2, :p3";
             using (var c = GetCommand(sql))
             {
                 var p1 = c.CreateParameter();
@@ -49,7 +51,6 @@ namespace Simple.Data.Oracle.Tests
                 Console.WriteLine(timeSpan.TotalMilliseconds);
                 Assert.That(timeSpan.TotalMilliseconds, Is.AtMost(2000));
             }
-
-        }
+        }        
     }
 }

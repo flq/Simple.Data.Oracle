@@ -18,6 +18,7 @@ namespace Simple.Data.Oracle
                     {"NUMBER", DbType.Decimal},
                     {"CHAR", DbType.StringFixedLength},
                     {"DATE", DbType.Date},
+                    {"TIMESTAMP(6)", DbType.Date},
                 };
 
         public static DbType FromDataType(string dataType)
