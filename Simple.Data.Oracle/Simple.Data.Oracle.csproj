@@ -57,7 +57,7 @@
     <Compile Include="OracleProcedureExecutor.cs" />
     <Compile Include="OracleSchemaProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SqlReflectExtensions.cs" />
+    <Compile Include="DatabaseExtensions.cs" />
     <Compile Include="ReflectionSql\SqlLoader.cs" />
     <Compile Include="SqlReflection.cs" />
   </ItemGroup>

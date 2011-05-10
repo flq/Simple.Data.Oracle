@@ -7,6 +7,7 @@ namespace Simple.Data.Oracle.Tests
     {
         public decimal RegionId { get; set; }
         public string RegionName { get; set; }
+        public DateTime CreateDate { get; set; }
     }
 
     [TestFixture]
@@ -68,9 +69,16 @@ namespace Simple.Data.Oracle.Tests
             Assert.IsNull(rgn);
         }
 
+        [Test]
+        public void the_default_datetime_of_db_is_returned()
+        {
+            var r = (Region)_db.Regions.Insert(RegionId: 5, RegionName: "Antarctica");
+            Assert.That(DateTime.Now - r.CreateDate, Is.AtMost(TimeSpan.FromSeconds(2)));
+        }
+
         private void InsertRegion()
         {
-            _db.Regions.Insert(new Region {RegionId = 5, RegionName = "Antarctica"});
+            _db.Regions.Insert(new Region {RegionId = 5m, RegionName = "Antarctica"});
         }
     }
 }

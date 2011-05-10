@@ -21,11 +21,28 @@ namespace Simple.Data.Oracle
                     {"TIMESTAMP(6)", DbType.Date},
                 };
 
+        private static readonly Dictionary<string, Type> _dbToClr =
+            new Dictionary<string, Type>
+                {
+                    {"VARCHAR2", typeof (string)},
+                    {"NUMBER", typeof (decimal)},
+                    {"DATE", typeof (DateTime)}
+                };
+
         public static DbType FromDataType(string dataType)
         {
             DbType dbType;
             var success = _types.TryGetValue(dataType, out dbType);
             return success ? dbType : DbType.Object;
+        }
+
+        public static Type ToClrType(this string oracleType)
+        {
+            Type type;
+            var success = _dbToClr.TryGetValue(oracleType.ToUpperInvariant(), out type);
+            if (!success)
+                throw new ArgumentException("Oracle type " + oracleType + " could not be mapped to clr type.");
+            return type;
         }
     }
 }

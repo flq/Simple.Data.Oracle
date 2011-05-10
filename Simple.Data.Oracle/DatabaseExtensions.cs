@@ -7,14 +7,9 @@ using System.Linq;
 
 namespace Simple.Data.Oracle
 {
-    internal static class SqlReflectExtensions
+    internal static class DatabaseExtensions
     {
-        private static Dictionary<string, Type> _dbToClr = new Dictionary<string, Type>
-                                                               {
-                                                                   { "VARCHAR2", typeof(string) },
-                                                                   { "NUMBER", typeof(decimal) },
-                                                                   { "DATE", typeof(DateTime) }
-                                                               };
+        
         
         /// <summary>
         /// http://forums.asp.net/t/791115.aspx/1?ODP+NET+Function+call+with+VARCHAR2+return+value+cause+ERROR
@@ -68,15 +63,6 @@ namespace Simple.Data.Oracle
             return proc.Parameters.Where(p => p.Direction == ParameterDirection.Output || p.Direction == ParameterDirection.ReturnValue);
         }
 
-        public static Type ToClrType(this string oracleType)
-        {
-            Type type;
-            var success = _dbToClr.TryGetValue(oracleType.ToUpperInvariant(), out type);
-            if (!success)
-                throw new ArgumentException("Oracle type " + oracleType + " could not be mapped to clr type.");
-            return type;
-        }
-
         public static ParameterDirection ToParameterDirection(this string direction, bool treatOutputAsReturn)
         {
             switch (direction.ToUpperInvariant())
@@ -112,6 +98,13 @@ namespace Simple.Data.Oracle
         public static IEnumerable<T> ReaderFrom<T>(this OracleConnectionProvider provider, string sqlText, Func<OracleDataReader, T> select)
         {
             return provider.ReaderFrom(sqlText, _ => { }, select);
+        }
+
+        public static void TryOpen(this IDbConnection con)
+        {
+            if (con.State == ConnectionState.Open)
+                return;
+            con.Open();
         }
     }
 }
