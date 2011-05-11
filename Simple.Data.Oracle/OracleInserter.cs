@@ -37,9 +37,10 @@ namespace Simple.Data.Oracle
                 cmd.WriteTrace();
                 cmd.Connection.TryOpen();
                 cmd.ExecuteNonQuery();
-                data = tuples.Values.ToDictionary(
-                  it => Hack(it), 
-                  it => ((IDbDataParameter)cmd.Parameters[it.ReturningParameterName]).Value);
+                var returnData = new DbDictionary();
+                foreach (var it in tuples.Values)
+                    returnData.Add(it.SimpleDataColumn, ((IDbDataParameter)cmd.Parameters[it.ReturningParameterName]).Value);
+                data = returnData;
             }
 
             return data;

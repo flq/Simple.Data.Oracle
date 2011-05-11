@@ -51,6 +51,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DbTypeConverter.cs" />
+    <Compile Include="DbDictionary.cs" />
     <Compile Include="OracleConnectionProvider.cs" />
     <Compile Include="OracleInserter.cs" />
     <Compile Include="OraclePager.cs" />
