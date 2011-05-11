@@ -46,17 +46,6 @@ namespace Simple.Data.Oracle
             return data;
         }
 
-        private string Hack(InsertTuple it)
-        {
-            switch (it.SimpleDataColumn)
-            {
-                case "regionid": return "RegionId";
-                case "regionname": return "RegionName";
-                case "createdate": return "CreateDate";
-            }
-            throw new ApplicationException();
-        }
-
         private IDbCommand ConstructCommand(IDictionary<string, InsertTuple> tuples, string qualifiedTableName, Func<IDbCommand> createCommand)
         {
             var cmd = createCommand();
@@ -78,9 +67,11 @@ namespace Simple.Data.Oracle
                 colsSB.Append(", ");
                 colsSB.Append(t.QuotedDbColumn);
                 valsSB.Append(", ");
-                valsSB.Append(t.InsertionParameterName);
+                valsSB.Append(t.InsertionSlotText);
+                if (!t.RequiresInputParameterDefinition)
+                    continue;
                 var p = cmd.CreateParameter();
-                p.ParameterName = t.InsertionParameterName;
+                p.ParameterName = t.InsertionSlotText;
                 p.Value = t.InsertedValue;
                 cmd.Parameters.Add(p);
             }
@@ -120,7 +111,7 @@ namespace Simple.Data.Oracle
                                           Column = c,
                                           QuotedDbColumn = c.QuotedName,
                                           SimpleDataColumn = c.HomogenizedName,
-                                          InsertionParameterName = ":pi" + i,
+                                          InsertionSlotText = ":pi" + i,
                                           ReturningParameterName = ":ri" + i
                                       })
                 .ToDictionary(it => it.SimpleDataColumn, it => it);
@@ -130,10 +121,10 @@ namespace Simple.Data.Oracle
         {
             public string SimpleDataColumn;
             public string QuotedDbColumn;
-            public string InsertionParameterName;
+            public string InsertionSlotText;
+            public bool RequiresInputParameterDefinition = true;
             public string ReturningParameterName;
             public Column Column;
-            public object ReturnedValue;
 
             private object _insertedValue;
             public object InsertedValue
@@ -143,6 +134,11 @@ namespace Simple.Data.Oracle
                 {
                     ToBeInserted = true;
                     _insertedValue = value;
+                    if (!(value is Sequence)) 
+                        return;
+                    
+                    InsertionSlotText = value.ToString();
+                    RequiresInputParameterDefinition = false;
                 }
             }
 

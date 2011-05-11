@@ -60,6 +60,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DatabaseExtensions.cs" />
     <Compile Include="ReflectionSql\SqlLoader.cs" />
+    <Compile Include="Sequence.cs" />
     <Compile Include="SqlReflection.cs" />
   </ItemGroup>
   <ItemGroup>

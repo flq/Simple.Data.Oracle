@@ -10,6 +10,14 @@ namespace Simple.Data.Oracle.Tests
         public DateTime CreateDate { get; set; }
     }
 
+    public class Employee
+    {
+        public decimal EmployeeId { get; set; }
+        public decimal? DepartmentId { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+    }
+
     [TestFixture]
     internal class InsertTests : OracleConnectivityContext
     {
@@ -74,6 +82,57 @@ namespace Simple.Data.Oracle.Tests
         {
             var r = (Region)_db.Regions.Insert(RegionId: 5, RegionName: "Antarctica");
             Assert.That(DateTime.Now - r.CreateDate, Is.AtMost(TimeSpan.FromSeconds(2)));
+        }
+
+        [Test]
+        public void usage_of_sequence_for_insert()
+        {
+            using (var tx = _db.BeginTransaction())
+            {
+                var d = tx.Departments.Insert(DepartmentId: Sequence.Next("DEPARTMENTS_SEQ"), DepartmentName: "My new Board", ManagerId: 100, LocationId: 1000);
+                Assert.That(d.DepartmentId, Is.AtLeast(100));
+            }
+        }
+
+        [Test]
+        public void usage_of_next_and_current_value()
+        {
+            using (var tx = _db.BeginTransaction())
+            {
+                tx.Departments.Insert(
+                  DepartmentId: Sequence.Next("DEPARTMENTS_SEQ"),
+                  DepartmentName: "Sky",
+                  ManagerId: 100,
+                  LocationId: 1000);
+                tx.Employees.Insert(
+                  EmployeeId: Sequence.Next("EMPLOYEES_SEQ"), 
+                  LastName: "Brannigan", 
+                  Email: "awesome@gmail.com", 
+                  HireDate: new DateTime(2011,1,1),
+                  JobId: "AD_ASST",
+                  DepartmentId: Sequence.Current("DEPARTMENTS_SEQ"));
+                var d = tx.Departments.Find(tx.Departments.Employees.LastName == "Brannigan");
+                Assert.AreEqual("Sky", d.DepartmentName);
+            }
+        }
+
+        [Test]
+        public void return_of_insertion_maps_dbnull_to_null()
+        {
+            using (var tx = _db.BeginTransaction())
+            {
+                var e = (Employee)tx.Employees.Insert(
+                  EmployeeId: Sequence.Next("EMPLOYEES_SEQ"),
+                  LastName: "Brannigan",
+                  Email: "awesome@gmail.com",
+                  HireDate: new DateTime(2011, 1, 1),
+                  JobId: "AD_ASST");
+                
+                Assert.That(e.EmployeeId, Is.AtLeast(100));
+                Assert.AreEqual("Brannigan", e.LastName);
+                Assert.IsNull(e.FirstName);
+                Assert.IsFalse(e.DepartmentId.HasValue);
+            }
         }
 
         private void InsertRegion()
