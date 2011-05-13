@@ -162,12 +162,13 @@ namespace Simple.Data.Oracle
                                                      {
                                                          ObjectName = (r.IsDBNull(1) ? "" : r.GetString(1) + "__") + r.GetString(0),
                                                          ArgumentName = r.IsDBNull(2) ? null : r.GetString(2),
-                                                         DataType = r.GetString(3),
+                                                         DataType = r.IsDBNull(3) ? null : r.GetString(3),
                                                          Direction = r.GetString(4)
                                                      });
             
             // For return values, argument name is null
             _args = (from a in args
+                     where a.DataType != null
                     let type = a.DataType.ToClrType()
                     let direction = a.Direction.ToParameterDirection(a.ArgumentName == null)
                      select Tuple.Create(a.ObjectName, a.ArgumentName ?? "__ReturnValue", type, direction)).ToList();

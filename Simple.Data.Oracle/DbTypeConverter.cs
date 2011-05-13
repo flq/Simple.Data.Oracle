@@ -19,6 +19,7 @@ namespace Simple.Data.Oracle
                     {"CHAR", DbType.StringFixedLength},
                     {"DATE", DbType.Date},
                     {"TIMESTAMP(6)", DbType.Date},
+                    {"RAW", DbType.Guid}
                 };
 
         private static readonly Dictionary<string, Type> _dbToClr =
@@ -26,7 +27,10 @@ namespace Simple.Data.Oracle
                 {
                     {"VARCHAR2", typeof (string)},
                     {"NUMBER", typeof (decimal)},
-                    {"DATE", typeof (DateTime)}
+                    {"DATE", typeof (DateTime)},
+                    {"TIMESTAMP", typeof (DateTime)},
+                    {"RAW", typeof (Guid)},
+                    {"BLOB", typeof (byte[])}
                 };
 
         public static DbType FromDataType(string dataType)
