@@ -2,7 +2,7 @@
 <package xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <metadata xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
     <id>Simple.Data.Oracle</id>
-    <version>0.5.5</version>
+    <version>0.6.3</version>
     <authors>Frank Quednau</authors>
     <owners>Frank Quednau</owners>
     <description>Oracle Provider for the Simple.Data data access library.</description> 
@@ -12,7 +12,7 @@
     <tags>oracle database data ado .net40</tags>
     <language>en-us</language>
     <dependencies>
-      <dependency id="Simple.Data.Core" version="0.6.3" />
+      <dependency id="Simple.Data.Ado" version="0.6.3" />
     </dependencies>
   </metadata>
 </package>
