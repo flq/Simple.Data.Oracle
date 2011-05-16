@@ -38,19 +38,18 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\lib\Oracle.DataAccess.dll</HintPath>
     </Reference>
-    <Reference Include="Simple.Data, Version=0.5.6.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Simple.Data, Version=0.6.3.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\lib\Simple.Data.dll</HintPath>
+      <HintPath>..\packages\Simple.Data.Core.0.6.3\lib\net40\Simple.Data.dll</HintPath>
     </Reference>
-    <Reference Include="Simple.Data.Ado, Version=0.6.1.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Simple.Data.Ado, Version=0.6.3.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\lib\Simple.Data.Ado.dll</HintPath>
+      <HintPath>..\packages\Simple.Data.Ado.0.6.3\lib\net40\Simple.Data.Ado.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Data.OracleClient" />
     <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
@@ -65,15 +64,14 @@
     <Compile Include="RawOracleTest.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="_hr_schema.txt" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\Simple.Data.Oracle\Simple.Data.Oracle.csproj">
       <Project>{C4E1B507-9F39-43A6-B698-CB2DC77F0808}</Project>
       <Name>Simple.Data.Oracle</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Content Include="_hr_schema.txt" />
-  </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
