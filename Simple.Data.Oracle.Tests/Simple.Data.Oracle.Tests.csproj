@@ -38,11 +38,11 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\lib\Oracle.DataAccess.dll</HintPath>
     </Reference>
-    <Reference Include="Simple.Data, Version=0.6.3.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Simple.Data, Version=0.6.4.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Simple.Data.Core.0.6.3\lib\net40\Simple.Data.dll</HintPath>
     </Reference>
-    <Reference Include="Simple.Data.Ado, Version=0.6.3.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Simple.Data.Ado, Version=0.6.4.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Simple.Data.Ado.0.6.3\lib\net40\Simple.Data.Ado.dll</HintPath>
     </Reference>
@@ -55,6 +55,7 @@
   <ItemGroup>
     <Compile Include="BasicConnectivity.cs" />
     <Compile Include="ExploratoryTesting.cs" />
+    <Compile Include="GuidInsertionTests.cs" />
     <Compile Include="InsertTests.cs" />
     <Compile Include="OracleConnectivityContext.cs" />
     <Compile Include="PagingTest.cs" />
@@ -71,6 +72,9 @@
       <Project>{C4E1B507-9F39-43A6-B698-CB2DC77F0808}</Project>
       <Name>Simple.Data.Oracle</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

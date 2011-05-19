@@ -1,6 +1,4 @@
-﻿using System.Data;
-using NUnit.Framework;
-using Oracle.DataAccess.Client;
+﻿using Oracle.DataAccess.Client;
 using Simple.Data.Ado.Schema;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +9,7 @@ namespace Simple.Data.Oracle.Tests
     {
         protected dynamic _db;
         protected const string ConnectionString = "Data Source=XE;User id=hr;Password=hr";
+        protected const string ProviderName = "Oracle.DataAccess.Client";
 
         protected void InitDynamicDB()
         {

@@ -39,7 +39,7 @@ namespace Simple.Data.Oracle
                 cmd.ExecuteNonQuery();
                 var returnData = new DbDictionary();
                 foreach (var it in tuples.Values)
-                    returnData.Add(it.SimpleDataColumn, ((IDbDataParameter)cmd.Parameters[it.ReturningParameterName]).Value);
+                    returnData.Add(it.SimpleDataColumn, NormalizeReturningValue((IDbDataParameter)cmd.Parameters[it.ReturningParameterName]));
                 data = returnData;
             }
 
@@ -72,12 +72,29 @@ namespace Simple.Data.Oracle
                     continue;
                 var p = cmd.CreateParameter();
                 p.ParameterName = t.InsertionSlotText;
-                p.Value = t.InsertedValue;
+                p.Value = NormalizeInsertedValue(t);
                 cmd.Parameters.Add(p);
             }
 
             return string.Format("INSERT INTO {0} ({1}) VALUES ({2})", qualifiedTableName, colsSB.ToString().Substring(2),
                                  valsSB.ToString().Substring(2));
+        }
+
+        private static object NormalizeInsertedValue(InsertTuple t)
+        {
+            var value = t.InsertedValue;
+            if (value == null)
+                return DBNull.Value;
+            if (value is Guid)
+                return ((Guid) t.InsertedValue).ToByteArray();
+            return t.InsertedValue;
+        }
+
+        private static object NormalizeReturningValue(IDbDataParameter dbDataParameter)
+        {
+            if (dbDataParameter.DbType == DbType.Binary && dbDataParameter.Size == 16)
+                return new Guid((byte[])dbDataParameter.Value);
+            return dbDataParameter.Value;
         }
 
         private string GetReturningPart(IDictionary<string, InsertTuple> tuples, IDbCommand cmd)

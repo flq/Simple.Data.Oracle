@@ -7,6 +7,7 @@ using Simple.Data.Ado.Schema;
 
 namespace Simple.Data.Oracle
 {
+    [Export("Oracle.DataAccess.Client", typeof(IConnectionProvider))]
     [Export("sql", typeof(IConnectionProvider))]
     internal class OracleConnectionProvider : IConnectionProvider
     {

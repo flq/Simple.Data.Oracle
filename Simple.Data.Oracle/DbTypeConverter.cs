@@ -19,7 +19,7 @@ namespace Simple.Data.Oracle
                     {"CHAR", DbType.StringFixedLength},
                     {"DATE", DbType.Date},
                     {"TIMESTAMP(6)", DbType.Date},
-                    {"RAW", DbType.Guid},
+                    {"RAW", DbType.Binary},
                 };
 
         private static readonly Dictionary<string, Type> _dbToClr =

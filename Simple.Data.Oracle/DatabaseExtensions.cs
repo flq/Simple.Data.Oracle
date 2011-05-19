@@ -78,7 +78,7 @@ namespace Simple.Data.Oracle
             return s.Equals(other, StringComparison.InvariantCultureIgnoreCase);
         }
 
-        public static IEnumerable<T> ReaderFrom<T>(this OracleConnectionProvider provider, string sqlText, Action<OracleCommand> modCommand, Func<OracleDataReader, T> select)
+        public static IEnumerable<T> ReaderFrom<T>(this OracleConnectionProvider provider, string sqlText, Action<OracleCommand> modCommand, Func<IDataReader, T> select)
         {
             using (var cn = provider.CreateOracleConnection())
             {
@@ -95,7 +95,7 @@ namespace Simple.Data.Oracle
             }
         }
 
-        public static IEnumerable<T> ReaderFrom<T>(this OracleConnectionProvider provider, string sqlText, Func<OracleDataReader, T> select)
+        public static IEnumerable<T> ReaderFrom<T>(this OracleConnectionProvider provider, string sqlText, Func<IDataReader, T> select)
         {
             return provider.ReaderFrom(sqlText, _ => { }, select);
         }
