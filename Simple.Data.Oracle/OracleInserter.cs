@@ -15,7 +15,7 @@ namespace Simple.Data.Oracle
     {
         public IDictionary<string, object> Insert(AdoAdapter adapter, string tableName, IDictionary<string, object> data, IDbTransaction transaction)
         {
-            var s = DatabaseSchema.Get(adapter.ConnectionProvider);
+            var s = DatabaseSchema.Get(adapter.ConnectionProvider, new ProviderHelper());
             var table = s.FindTable(tableName);
             
             var tuples = InitializeInsertion(table);

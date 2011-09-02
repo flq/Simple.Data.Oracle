@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
@@ -22,7 +21,7 @@ namespace Simple.Data.Oracle
         public OracleProcedureExecutor(OracleConnectionProvider connectionProvider, ObjectName procedureName)
         {
             _connectionProvider = connectionProvider;
-            _schema = DatabaseSchema.Get(_connectionProvider);
+            _schema = DatabaseSchema.Get(_connectionProvider, new ProviderHelper());
             _procedureName = procedureName;
             _executeImpl = ExecuteReader;
         }

@@ -13,7 +13,7 @@ namespace Simple.Data.Oracle.Tests
 
         protected void InitDynamicDB()
         {
-            _db = Database.OpenConnection(ConnectionString);
+            _db = Database.Opener.OpenConnection(ConnectionString, "Oracle.DataAccess.Client");
         }
 
         protected List<Table> Tables { get; private set; }
