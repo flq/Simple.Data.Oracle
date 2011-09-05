@@ -4,7 +4,7 @@ using System.Data;
 using System.Data.Common;
 using System.Diagnostics;
 using System.Linq;
-using Oracle.DataAccess.Client;
+using Devart.Data.Oracle;
 using Simple.Data.Ado;
 using Simple.Data.Ado.Schema;
 using ResultSet = System.Collections.Generic.IEnumerable<System.Collections.Generic.IDictionary<string, object>>;

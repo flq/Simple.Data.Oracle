@@ -1,4 +1,5 @@
-﻿using Oracle.DataAccess.Client;
+﻿using System.Configuration;
+using Devart.Data.Oracle;
 using Simple.Data.Ado.Schema;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,12 +9,19 @@ namespace Simple.Data.Oracle.Tests
     internal class OracleConnectivityContext
     {
         protected dynamic _db;
-        protected const string ConnectionString = "Data Source=XE;User id=hr;Password=hr";
-        protected const string ProviderName = "Oracle.DataAccess.Client";
+        protected string _connectionString;
+        protected string _providerName;
+
+        public OracleConnectivityContext()
+        {
+            string connectionName = "DevartOracle";
+            _connectionString = ConfigurationManager.ConnectionStrings[connectionName].ConnectionString;
+            _providerName = ConfigurationManager.ConnectionStrings[connectionName].ProviderName;
+        }
 
         protected void InitDynamicDB()
         {
-            _db = Database.Opener.OpenConnection(ConnectionString, "Oracle.DataAccess.Client");
+            _db = Database.Opener.OpenConnection(_connectionString, _providerName);
         }
 
         protected List<Table> Tables { get; private set; }
@@ -26,7 +34,7 @@ namespace Simple.Data.Oracle.Tests
         protected OracleConnectionProvider GetConnectionProvider()
         {
             var p = new OracleConnectionProvider();
-            p.SetConnectionString(ConnectionString);
+            p.SetConnectionString(_connectionString);
             return p;
         }
 
@@ -44,7 +52,7 @@ namespace Simple.Data.Oracle.Tests
 
         protected OracleCommand GetCommand(string text)
         {
-            var con = new OracleConnection(ConnectionString);
+            var con = new OracleConnection(_connectionString);
             var c = new OracleCommand(text, con);
             return c;
         }

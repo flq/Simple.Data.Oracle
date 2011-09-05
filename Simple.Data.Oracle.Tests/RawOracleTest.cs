@@ -2,7 +2,7 @@ using System;
 using System.Data;
 using System.Diagnostics;
 using NUnit.Framework;
-using Oracle.DataAccess.Client;
+using Devart.Data.Oracle;
 
 namespace Simple.Data.Oracle.Tests
 {

@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using Oracle.DataAccess.Client;
+using Devart.Data.Oracle;
 using Simple.Data.Ado.Schema;
 using System.Linq;
 
