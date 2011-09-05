@@ -83,9 +83,9 @@ namespace Simple.Data.Oracle.Tests
 
             Assert.AreEqual(106, employees.Count); // The top man is missing
 
-            var kings_subordinates = employees.Where(e => e.Manager == "King").ToList();
+            var kingsSubordinates = employees.Where(e => e.Manager == "King").ToList();
 
-            Assert.AreEqual(14, kings_subordinates.Count);
+            Assert.AreEqual(14, kingsSubordinates.Count);
         }
 
         [Test]
@@ -99,5 +99,19 @@ namespace Simple.Data.Oracle.Tests
             Assert.IsTrue(employees.All(e => e.Manager.Equals("King")));
         }
 
+
+        [Test,Ignore("Currently fails with stack overflow")]
+        public void page_with_total_count()
+        {
+            Promise<int> count;
+            List<dynamic> list = _db.Employees.QueryByEmployeeId(100.to(125))
+                .Take(10)
+				.WithTotalCount(out count)
+                .ToList();
+
+            Assert.IsTrue(count.HasValue);
+            Assert.AreEqual(10, list.Count);
+            Assert.AreEqual(25, count);
+        }
     }
 }

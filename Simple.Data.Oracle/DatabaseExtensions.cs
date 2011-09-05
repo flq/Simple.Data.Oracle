@@ -1,9 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using Devart.Data.Oracle;
 using Simple.Data.Ado.Schema;
 using System.Linq;
+#if DEVART
+using Devart.Data.Oracle;
+#endif
+#if !DEVART
+using Oracle.DataAccess.Client;
+#endif
+
 
 namespace Simple.Data.Oracle
 {

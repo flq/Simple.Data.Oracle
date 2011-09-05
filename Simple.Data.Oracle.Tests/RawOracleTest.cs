@@ -1,8 +1,9 @@
 using System;
 using System.Data;
-using System.Diagnostics;
 using NUnit.Framework;
+#if DEVART
 using Devart.Data.Oracle;
+#endif
 
 namespace Simple.Data.Oracle.Tests
 {

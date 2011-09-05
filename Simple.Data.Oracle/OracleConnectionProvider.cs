@@ -1,13 +1,20 @@
-﻿using System;
-using System.ComponentModel.Composition;
+﻿using System.ComponentModel.Composition;
 using System.Data;
-using Devart.Data.Oracle;
 using Simple.Data.Ado;
 using Simple.Data.Ado.Schema;
+#if DEVART
+using Devart.Data.Oracle;
+#else
+using Oracle.DataAccess.Client;
+#endif
 
 namespace Simple.Data.Oracle
 {
+    #if DEVART 
     [Export("Devart.Data.Oracle", typeof(IConnectionProvider))]
+    #else
+    [Export("Oracle.DataAccess.Client", typeof(IConnectionProvider))]
+    #endif
     internal class OracleConnectionProvider : IConnectionProvider
     {
 
@@ -56,7 +63,16 @@ namespace Simple.Data.Oracle
 
         internal string UserOfConnection
         {
-            get { return ConnectionString != null ? new OracleConnectionStringBuilder(ConnectionString).UserId.ToUpperInvariant() : null; }
+            get { return ConnectionString != null ? UserIdOfConnection() : null; }
+        }
+
+        private string UserIdOfConnection()
+        {
+            #if !DEVART
+            return new OracleConnectionStringBuilder(ConnectionString).UserID.ToUpperInvariant();
+            #else
+            return new OracleConnectionStringBuilder(ConnectionString).UserId.ToUpperInvariant();
+            #endif
         }
     }
 }
