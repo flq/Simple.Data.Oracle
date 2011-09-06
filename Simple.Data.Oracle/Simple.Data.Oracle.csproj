@@ -24,7 +24,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'DevartDebug|AnyCPU' ">
     <UseDevartProvider>True</UseDevartProvider>
-	<DebugSymbols>true</DebugSymbols>
+    <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\DevartDebug\</OutputPath>
@@ -58,17 +58,17 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\lib\Devart.Data.Oracle.dll</HintPath>
     </Reference>
-	<Reference Include="Oracle.DataAccess, Version=10.2.0.100, Culture=neutral, PublicKeyToken=89b483f429c47342" Condition=" '$(UseDevartProvider)' != 'True' ">
+    <Reference Include="Oracle.DataAccess, Version=10.2.0.100, Culture=neutral, PublicKeyToken=89b483f429c47342" Condition=" '$(UseDevartProvider)' != 'True' ">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\lib\Oracle.DataAccess.dll</HintPath>
     </Reference>
-    <Reference Include="Simple.Data, Version=0.9.3.2, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Simple.Data, Version=0.9.5.1, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Simple.Data.Core.0.9.3.2\lib\net40\Simple.Data.dll</HintPath>
+      <HintPath>..\packages\Simple.Data.Core.0.9.5.1\lib\net40\Simple.Data.dll</HintPath>
     </Reference>
-    <Reference Include="Simple.Data.Ado, Version=0.9.3.2, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Simple.Data.Ado, Version=0.9.5.1, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Simple.Data.Ado.0.9.3.2\lib\net40\Simple.Data.Ado.dll</HintPath>
+      <HintPath>..\packages\Simple.Data.Ado.0.9.5.1\lib\net40\Simple.Data.Ado.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
