@@ -11,7 +11,7 @@ namespace Simple.Data.Oracle
     /// </summary>
     public static class DbTypeConverter
     {
-        private static readonly Dictionary<string, DbType> _types =
+        private static readonly Dictionary<string, DbType> _dbTypes =
             new Dictionary<string, DbType>(StringComparer.InvariantCultureIgnoreCase)
                 {
                     {"CHAR", DbType.StringFixedLength},
@@ -19,8 +19,24 @@ namespace Simple.Data.Oracle
                     {"VARCHAR2", DbType.String},
                     {"NVARCHAR2", DbType.String},
                     {"NUMBER", DbType.Decimal},
+                    {"BLOB", DbType.Binary},
+                    {"CLOB", DbType.String},
+                    {"NCLOB", DbType.String},
+                    {"ROWID", DbType.String},
+                    {"UROWID", DbType.String},
+                    {"XMLTYPE", DbType.String},
+                    {"LONG", DbType.Decimal},
+                    {"FLOAT", DbType.Decimal},
+                    {"REAL", DbType.Decimal},
+                    {"BINARY_FLOAT", DbType.Decimal},
+                    {"BINARY_DOUBLE", DbType.Decimal},
                     {"DATE", DbType.Date},
                     {"TIMESTAMP(6)", DbType.Date},
+                    {"TIMESTAMP", DbType.Date},
+                    {"TIMESTAMP WITH TIME ZONE", DbType.Date},
+                    {"TIMESTAMP WITH LOCAL TIME ZONE", DbType.Date},
+                    {"INTERVAL YEAR TO MONTH", DbType.String},
+                    {"INTERVAL DAY TO SECOND", DbType.Time},
                     {"RAW", DbType.Binary},
                     {"RAW(16)", DbType.Guid},
                 };
@@ -37,14 +53,28 @@ namespace Simple.Data.Oracle
                     {"TIMESTAMP", typeof (DateTime)},
                     {"RAW", typeof (Guid)},
                     {"BLOB", typeof (byte[])},
+                    {"CLOB", typeof (string)},
+                    {"NCLOB", typeof (string)},
+                    {"ROWID", typeof (string)},
+                    {"UROWID", typeof (string)},
+                    {"XMLTYPE", typeof (string)},
+                    {"INTERVAL YEAR TO MONTH", typeof (string)},
+                    {"LONG", typeof (string)},
+                    {"FLOAT", typeof (decimal)},
+                    {"REAL", typeof (decimal)},
+                    {"BINARY_FLOAT", typeof (decimal)},
+                    {"BINARY_DOUBLE", typeof (decimal)},
+                    {"TIMESTAMP WITH TIME ZONE", typeof (DateTime)},
+                    {"TIMESTAMP WITH LOCAL TIME ZONE", typeof (DateTime)},
+                    {"INTERVAL DAY TO SECOND", typeof (DateTime)},
                     {"REF CURSOR", typeof (object)},
-                    {"PL/SQL BOOLEAN", typeof (object)},
+                    {"PL/SQL BOOLEAN", typeof (bool)},
                 };
 
         public static DbType FromDataType(string dataType)
         {
             DbType dbType;
-            var success = _types.TryGetValue(dataType, out dbType);
+            var success = _dbTypes.TryGetValue(dataType, out dbType);
             return success ? dbType : DbType.Object;
         }
 
