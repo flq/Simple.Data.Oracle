@@ -14,23 +14,31 @@ namespace Simple.Data.Oracle
         private static readonly Dictionary<string, DbType> _types =
             new Dictionary<string, DbType>(StringComparer.InvariantCultureIgnoreCase)
                 {
-                    {"VARCHAR2", DbType.String},
-                    {"NUMBER", DbType.Decimal},
                     {"CHAR", DbType.StringFixedLength},
+                    {"NCHAR", DbType.StringFixedLength},
+                    {"VARCHAR2", DbType.String},
+                    {"NVARCHAR2", DbType.String},
+                    {"NUMBER", DbType.Decimal},
                     {"DATE", DbType.Date},
                     {"TIMESTAMP(6)", DbType.Date},
                     {"RAW", DbType.Binary},
+                    {"RAW(16)", DbType.Guid},
                 };
 
         private static readonly Dictionary<string, Type> _dbToClr =
             new Dictionary<string, Type>
                 {
+                    {"CHAR", typeof (string)},
+                    {"NCHAR", typeof (string)},
                     {"VARCHAR2", typeof (string)},
+                    {"NVARCHAR2", typeof (string)},
                     {"NUMBER", typeof (decimal)},
                     {"DATE", typeof (DateTime)},
                     {"TIMESTAMP", typeof (DateTime)},
                     {"RAW", typeof (Guid)},
-                    {"BLOB", typeof (byte[])}
+                    {"BLOB", typeof (byte[])},
+                    {"REF CURSOR", typeof (object)},
+                    {"PL/SQL BOOLEAN", typeof (object)},
                 };
 
         public static DbType FromDataType(string dataType)
