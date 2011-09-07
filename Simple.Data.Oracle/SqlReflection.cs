@@ -108,8 +108,11 @@ namespace Simple.Data.Oracle
                 r => Tuple.Create(
                     r.GetString(0), 
                     r.GetString(1),
-                    DbTypeConverter.FromDataType(r.GetString(2), Convert.ToInt32(r.GetDecimal(3)), Convert.ToInt32(r.GetDecimal(4))),
-                    Convert.ToInt32(r.GetDecimal(3))))
+                    DbTypeConverter.FromDataType(
+                        r.GetString(2),
+                        r.IsDBNull(3) ? 0 : Convert.ToInt32(r.GetDecimal(3)),
+                        r.IsDBNull(4) ? 0 : Convert.ToInt32(r.GetDecimal(4))),
+                    r.IsDBNull(3) ? 0 : Convert.ToInt32(r.GetDecimal(3))))
                 .ToList();
         }
 

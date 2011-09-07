@@ -100,7 +100,7 @@ namespace Simple.Data.Oracle.Tests
         }
 
 
-        [Test,Ignore("Currently fails with stack overflow")]
+        [Test]
         public void page_with_total_count()
         {
             Promise<int> count;
