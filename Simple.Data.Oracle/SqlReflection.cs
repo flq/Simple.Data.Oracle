@@ -107,9 +107,12 @@ namespace Simple.Data.Oracle
             _columnsFlat = _provider.ReaderFrom(SqlLoader.UserColumns, 
                 r => Tuple.Create(
                     r.GetString(0), 
-                    r.GetString(1), 
-                    DbTypeConverter.FromDataType(r.GetString(2)),
-                    Convert.ToInt32(r.GetDecimal(3))))
+                    r.GetString(1),
+                    DbTypeConverter.FromDataType(
+                        r.GetString(2),
+                        r.IsDBNull(3) ? 0 : Convert.ToInt32(r.GetDecimal(3)),
+                        r.IsDBNull(4) ? 0 : Convert.ToInt32(r.GetDecimal(4))),
+                    r.IsDBNull(3) ? 0 : Convert.ToInt32(r.GetDecimal(3))))
                 .ToList();
         }
 
@@ -163,13 +166,15 @@ namespace Simple.Data.Oracle
                                                          ObjectName = (r.IsDBNull(1) ? "" : r.GetString(1) + "__") + r.GetString(0),
                                                          ArgumentName = r.IsDBNull(2) ? null : r.GetString(2),
                                                          DataType = r.IsDBNull(3) ? null : r.GetString(3),
-                                                         Direction = r.GetString(4)
+                                                         DataPrecision = r.IsDBNull(4) ? 0 : Convert.ToInt32(r.GetDecimal(4)),
+                                                         DataScale = r.IsDBNull(5) ? 0 : Convert.ToInt32(r.GetDecimal(5)),
+                                                         Direction = r.GetString(6)
                                                      });
             
             // For return values, argument name is null
             _args = (from a in args
                      where a.DataType != null
-                    let type = a.DataType.ToClrType()
+                    let type = a.DataType.ToClrType(a.DataPrecision, a.DataScale)
                     let direction = a.Direction.ToParameterDirection(a.ArgumentName == null)
                      select Tuple.Create(a.ObjectName, a.ArgumentName ?? "__ReturnValue", type, direction)).ToList();
 
