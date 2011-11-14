@@ -11,6 +11,13 @@ since it needs the native backend of the client. Add the native backend to your 
 
 The .NET dll. is then found under %INSTALL%\odp.net\bin\4 - copy it into the lib folder.
 
+#Devart Provider
+The solution is prepared to be compiled against the devart Oracle provider thanks to input from *Vagif Abilov*. For this some hokery-pokery is done 
+in the solution and project files. You can switch from Debug/Release configurations to DevartDebug/DevartRelease. The changes in the config are
+
+- Definition of a compile flag **DEVART**
+- Referencing the corresponding devart assemblies which need to be in the lib folder
+
 #Tests
 
 Tests run against an XE installation with the pre-installed hr user activated. The connectstring can be found in the 

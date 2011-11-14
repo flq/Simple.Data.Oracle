@@ -60,5 +60,10 @@ namespace Simple.Data.Oracle
                 throw new ArgumentException("baseName is not set.");
             return (baseName.StartsWith(":")) ? baseName : ":" + baseName;
         }
+
+        public string GetDefaultSchema()
+        {
+            return _sqlReflection.Schema;
+        }
     }
 }

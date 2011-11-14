@@ -84,6 +84,11 @@ namespace Simple.Data.Oracle
             }
         }
 
+        public string Schema
+        {
+            get { return _schema; }
+        }
+
         private void BuildData()
         {
             CreateTables();
@@ -97,7 +102,7 @@ namespace Simple.Data.Oracle
         private void CreatePrimaryKeys()
         {
             _pks = _provider.ReaderFrom(SqlLoader.PrimaryKeys,
-                                        cmd => cmd.Parameters.Add("1", _schema.ToUpperInvariant()), 
+                                        cmd => cmd.Parameters.Add("1", Schema.ToUpperInvariant()), 
                                         r => Tuple.Create(r.GetString(0), r.GetString(1)))
                 .ToList();
         }
@@ -115,7 +120,7 @@ namespace Simple.Data.Oracle
 
         private void CreateTables()
         {
-            _tables = _provider.ReaderFrom(SqlLoader.UserTablesAndViews, r => new Table(r.GetString(0), _schema, r.GetString(1).TypeFromData()))
+            _tables = _provider.ReaderFrom(SqlLoader.UserTablesAndViews, r => new Table(r.GetString(0), Schema, r.GetString(1).TypeFromData()))
                 .ToList();
             _tables.Add(new Table("DUAL", null, TableType.Table));
         }
@@ -143,7 +148,7 @@ namespace Simple.Data.Oracle
 
         private ObjectName ObjectNameFrom(string tableName)
         {
-            return new ObjectName(_schema, tableName);
+            return new ObjectName(Schema, tableName);
         }
 
         private void CreateProcedures()
@@ -151,13 +156,13 @@ namespace Simple.Data.Oracle
             var procedures = _provider.ReaderFrom(SqlLoader.Procedures, 
                 r => r.GetString(0) + (r.IsDBNull(1) ? "" : "__" + r.GetString(1)));
 
-            _procs = (from p in procedures select new Procedure(p, p, _schema)).ToList();
+            _procs = (from p in procedures select new Procedure(p, p, Schema)).ToList();
         }
 
         private void CreateProcedureArguments()
         {
             var args = _provider.ReaderFrom(SqlLoader.ProcedureArguments,
-                                            c => c.Parameters.Add("1", _schema.ToUpperInvariant()),
+                                            c => c.Parameters.Add("1", Schema.ToUpperInvariant()),
                                             r => new
                                                      {
                                                          ObjectName = (r.IsDBNull(1) ? "" : r.GetString(1) + "__") + r.GetString(0),

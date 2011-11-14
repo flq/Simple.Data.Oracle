@@ -1,0 +1,1 @@
+copy ..\..\Simple.Data\Simple.Data.Ado\bin\Debug\*.* .

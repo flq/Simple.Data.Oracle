@@ -13,27 +13,32 @@ EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
-		Release|Any CPU = Release|Any CPU
 		DevartDebug|Any CPU = DevartDebug|Any CPU
 		DevartRelease|Any CPU = DevartRelease|Any CPU
+		Release|Any CPU = Release|Any CPU
+		UseLocal|Any CPU = UseLocal|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{C4E1B507-9F39-43A6-B698-CB2DC77F0808}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C4E1B507-9F39-43A6-B698-CB2DC77F0808}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C4E1B507-9F39-43A6-B698-CB2DC77F0808}.DevartDebug|Any CPU.ActiveCfg = DevartDebug|Any CPU
 		{C4E1B507-9F39-43A6-B698-CB2DC77F0808}.DevartDebug|Any CPU.Build.0 = DevartDebug|Any CPU
+		{C4E1B507-9F39-43A6-B698-CB2DC77F0808}.DevartRelease|Any CPU.ActiveCfg = DevartRelease|Any CPU
+		{C4E1B507-9F39-43A6-B698-CB2DC77F0808}.DevartRelease|Any CPU.Build.0 = DevartRelease|Any CPU
 		{C4E1B507-9F39-43A6-B698-CB2DC77F0808}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C4E1B507-9F39-43A6-B698-CB2DC77F0808}.Release|Any CPU.Build.0 = Release|Any CPU
-        {C4E1B507-9F39-43A6-B698-CB2DC77F0808}.DevartRelease|Any CPU.ActiveCfg = DevartRelease|Any CPU
-		{C4E1B507-9F39-43A6-B698-CB2DC77F0808}.DevartRelease|Any CPU.Build.0 = DevartRelease|Any CPU
+		{C4E1B507-9F39-43A6-B698-CB2DC77F0808}.UseLocal|Any CPU.ActiveCfg = UseLocal|Any CPU
+		{C4E1B507-9F39-43A6-B698-CB2DC77F0808}.UseLocal|Any CPU.Build.0 = UseLocal|Any CPU
 		{2B0282A8-C783-4E0C-BC26-1EC3FBA6DB79}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{2B0282A8-C783-4E0C-BC26-1EC3FBA6DB79}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2B0282A8-C783-4E0C-BC26-1EC3FBA6DB79}.DevartDebug|Any CPU.ActiveCfg = DevartDebug|Any CPU
 		{2B0282A8-C783-4E0C-BC26-1EC3FBA6DB79}.DevartDebug|Any CPU.Build.0 = DevartDebug|Any CPU
-		{2B0282A8-C783-4E0C-BC26-1EC3FBA6DB79}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2B0282A8-C783-4E0C-BC26-1EC3FBA6DB79}.Release|Any CPU.Build.0 = Release|Any CPU
 		{2B0282A8-C783-4E0C-BC26-1EC3FBA6DB79}.DevartRelease|Any CPU.ActiveCfg = DevartRelease|Any CPU
 		{2B0282A8-C783-4E0C-BC26-1EC3FBA6DB79}.DevartRelease|Any CPU.Build.0 = DevartRelease|Any CPU
+		{2B0282A8-C783-4E0C-BC26-1EC3FBA6DB79}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2B0282A8-C783-4E0C-BC26-1EC3FBA6DB79}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2B0282A8-C783-4E0C-BC26-1EC3FBA6DB79}.UseLocal|Any CPU.ActiveCfg = UseLocal|Any CPU
+		{2B0282A8-C783-4E0C-BC26-1EC3FBA6DB79}.UseLocal|Any CPU.Build.0 = UseLocal|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

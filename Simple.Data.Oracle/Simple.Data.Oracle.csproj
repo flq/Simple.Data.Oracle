@@ -22,6 +22,16 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'UseLocal|AnyCPU' ">
+    <UseLocal>True</UseLocal>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'DevartDebug|AnyCPU' ">
     <UseDevartProvider>True</UseDevartProvider>
     <DebugSymbols>true</DebugSymbols>
@@ -62,13 +72,21 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\lib\Oracle.DataAccess.dll</HintPath>
     </Reference>
-    <Reference Include="Simple.Data, Version=0.9.5.1, Culture=neutral, processorArchitecture=MSIL">
+	<Reference Include="Simple.Data, Version=0.9.8.2, Culture=neutral, processorArchitecture=MSIL" Condition="'$(UseLocal)' != 'True'">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Simple.Data.Core.0.9.5.1\lib\net40\Simple.Data.dll</HintPath>
+      <HintPath>..\packages\Simple.Data.Core.0.9.8.2\lib\net40\Simple.Data.dll</HintPath>
     </Reference>
-    <Reference Include="Simple.Data.Ado, Version=0.9.5.1, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Simple.Data.Ado, Version=0.9.8.2, Culture=neutral, processorArchitecture=MSIL" Condition="'$(UseLocal)' != 'True'">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Simple.Data.Ado.0.9.5.1\lib\net40\Simple.Data.Ado.dll</HintPath>
+      <HintPath>..\packages\Simple.Data.Ado.0.9.8.2\lib\net40\Simple.Data.Ado.dll</HintPath>
+    </Reference>
+    <Reference Include="Simple.Data, Version=0.9.8.2, Culture=neutral, processorArchitecture=MSIL" Condition="'$(UseLocal)' == 'True'">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib\Simple.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="Simple.Data.Ado, Version=0.9.8.2, Culture=neutral, processorArchitecture=MSIL" Condition="'$(UseLocal)' == 'True'">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib\Simple.Data.Ado.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
