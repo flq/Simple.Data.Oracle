@@ -72,7 +72,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\lib\Oracle.DataAccess.dll</HintPath>
     </Reference>
-	<Reference Include="Simple.Data, Version=0.9.8.2, Culture=neutral, processorArchitecture=MSIL" Condition="'$(UseLocal)' != 'True'">
+    <Reference Include="Simple.Data, Version=0.9.8.2, Culture=neutral, processorArchitecture=MSIL" Condition="'$(UseLocal)' != 'True'">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Simple.Data.Core.0.9.8.2\lib\net40\Simple.Data.dll</HintPath>
     </Reference>
@@ -90,6 +90,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
@@ -128,6 +129,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="ReflectionSql\schema_columns.txt" />
+    <Content Include="ReflectionSql\table_access_for_schema.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
