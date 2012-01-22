@@ -14,6 +14,8 @@ namespace Simple.Data.Oracle.ReflectionSql
             get { return LoadFile("user_columns.txt"); }
         }
 
+        public static string SchemaColumns { get { return LoadFile("schema_columns.txt"); } }
+
         public static string PrimaryKeys
         {
             get { return LoadFile("table_pks.txt"); }
@@ -32,6 +34,11 @@ namespace Simple.Data.Oracle.ReflectionSql
         public static string ProcedureArguments
         {
             get { return LoadFile("procedure_args.txt"); }
+        }
+
+        public static string TableAccessForSchema
+        {
+            get { return LoadFile("table_access_for_schema.txt"); }
         }
 
         private static string LoadFile(string name)

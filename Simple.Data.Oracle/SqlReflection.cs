@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
 using System.Threading.Tasks;
 using Simple.Data.Ado;
@@ -25,7 +26,7 @@ namespace Simple.Data.Oracle
         public SqlReflection(OracleConnectionProvider provider)
         {
             _provider = provider;
-            _schema = provider.UserOfConnection;
+            _schema = ConfigurationManager.AppSettings.AllKeys.Contains("Simple.Data.Oracle.Schema") ? ConfigurationManager.AppSettings["Simple.Data.Oracle.Schema"] : provider.UserOfConnection;
             _buildData = new Task(BuildData);
             _buildData.Start();
         }
@@ -116,12 +117,34 @@ namespace Simple.Data.Oracle
                     DbTypeConverter.FromDataType(r.GetString(2)),
                     Convert.ToInt32(r.GetDecimal(3))))
                 .ToList();
+            if (!Schema.Equals(_provider.UserOfConnection, StringComparison.InvariantCultureIgnoreCase))
+                _columnsFlat.AddRange(_provider.ReaderFrom(SqlLoader.SchemaColumns,
+                                    c =>
+                                    {
+                                        c.Parameters.Add("1", Schema.ToUpperInvariant());
+                                        c.Parameters.Add("2", _provider.UserOfConnection.ToUpperInvariant());
+                                        c.Parameters.Add("3", _provider.UserOfConnection.ToUpperInvariant());
+                                        c.Parameters.Add("4", Schema.ToUpperInvariant());
+                                    },
+                                    r => Tuple.Create(r.GetString(0), r.GetString(1), DbTypeConverter.FromDataType(r.GetString(2)), Convert.ToInt32(r.GetDecimal(3)))).ToList());
         }
 
         private void CreateTables()
         {
             _tables = _provider.ReaderFrom(SqlLoader.UserTablesAndViews, r => new Table(r.GetString(0), Schema, r.GetString(1).TypeFromData()))
                 .ToList();
+            if (!Schema.Equals(_provider.UserOfConnection, StringComparison.InvariantCultureIgnoreCase))
+                _tables.AddRange(_provider.ReaderFrom(SqlLoader.TableAccessForSchema, c =>
+                {
+                    c.Parameters.Add("1",
+                                     _provider.
+                                         UserOfConnection.ToUpperInvariant());
+                    c.Parameters.Add("2",
+                                     _provider.
+                                         UserOfConnection.ToUpperInvariant());
+                    c.Parameters.Add("3", Schema.ToUpperInvariant());
+                },
+                r => new Table(r.GetString(0), Schema, TableType.Table)).ToList());
             _tables.Add(new Table("DUAL", null, TableType.Table));
         }
 

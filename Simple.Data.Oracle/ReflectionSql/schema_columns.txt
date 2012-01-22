@@ -1,0 +1,1 @@
+﻿select table_name, column_name, data_type, data_length from all_tab_cols where owner=:1 and table_name in (select distinct table_name from table_privileges where (grantee=:2 or grantee in (select granted_role from user_role_privs where username=:3))  and owner=:4)
