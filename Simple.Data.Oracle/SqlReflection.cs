@@ -136,12 +136,8 @@ namespace Simple.Data.Oracle
             if (!Schema.Equals(_provider.UserOfConnection, StringComparison.InvariantCultureIgnoreCase))
                 _tables.AddRange(_provider.ReaderFrom(SqlLoader.TableAccessForSchema, c =>
                 {
-                    c.Parameters.Add("1",
-                                     _provider.
-                                         UserOfConnection.ToUpperInvariant());
-                    c.Parameters.Add("2",
-                                     _provider.
-                                         UserOfConnection.ToUpperInvariant());
+                    c.Parameters.Add("1", _provider.UserOfConnection.ToUpperInvariant());
+                    c.Parameters.Add("2", _provider.UserOfConnection.ToUpperInvariant());
                     c.Parameters.Add("3", Schema.ToUpperInvariant());
                 },
                 r => new Table(r.GetString(0), Schema, TableType.Table)).ToList());
