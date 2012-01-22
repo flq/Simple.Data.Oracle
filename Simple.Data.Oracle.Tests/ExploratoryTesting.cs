@@ -17,7 +17,7 @@ namespace Simple.Data.Oracle.Tests
         [Test]
         public void employee_by_name()
         {
-            IEnumerable<dynamic> emps = _db.Employees.FindAllByFirstNameAndLastName("Steven", "King").OfType<dynamic>();
+            IEnumerable<dynamic> emps = _db.Employees.FindAllByFirstNameAndLastName("Steven", "King").ToList();
             Assert.AreEqual(1, emps.Count());
             var emp = emps.First();
             Assert.AreEqual("SKING", emp.Email);
@@ -97,6 +97,13 @@ namespace Simple.Data.Oracle.Tests
             List<dynamic> employees = q.Select(_db.Employees.LastName, q.Manager.LastName.As("Manager")).ToList();
             Assert.AreEqual(2, employees.Count); // The top man is missing
             Assert.IsTrue(employees.All(e => e.Manager.Equals("King")));
+        }
+
+        [Test]
+        public void just_returning_a_count()
+        {
+            int count = _db.Employees.FindAllByEmployeeId(100.to(102)).Count();
+            Assert.AreEqual(3, count);
         }
 
 

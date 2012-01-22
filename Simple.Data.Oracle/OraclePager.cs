@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Text;
 using Simple.Data.Ado;
@@ -16,7 +17,7 @@ namespace Simple.Data.Oracle
               WHERE b.RNUM >= 1
          * */
 
-        public string ApplyPaging(string sql, string skipParameterName, string takeParameterName)
+        public IEnumerable<string> ApplyPaging(string sql, int skip, int take)
         {
             sql = UpdateWithOrderByIfNecessary(sql);
             var sb = new StringBuilder();
@@ -24,10 +25,10 @@ namespace Simple.Data.Oracle
             sb.AppendLine("SELECT \"_sd_\".*, ROWNUM RNUM FROM (");
             sb.Append(sql);
             sb.AppendLine(") \"_sd_\"");
-            sb.AppendFormat("WHERE ROWNUM <= {0} + {1}) \"_sd2_\" ", skipParameterName, takeParameterName);
-            sb.AppendFormat("WHERE \"_sd2_\".RNUM > {0}", skipParameterName);
+            sb.AppendFormat("WHERE ROWNUM <= {0} + {1}) \"_sd2_\" ", skip, take);
+            sb.AppendFormat("WHERE \"_sd2_\".RNUM > {0}", skip);
 
-            return sb.ToString();
+            yield return sb.ToString();
         }
 
         private static string UpdateWithOrderByIfNecessary(string sql)

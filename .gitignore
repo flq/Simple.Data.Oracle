@@ -11,6 +11,7 @@ _ReSharper.*
 *.~
 *.swp
 *.nupkg
+packages
 Oracle.DataAccess.dll
 lib/Simple.*.dll
 lib/Simple.*.pdb
