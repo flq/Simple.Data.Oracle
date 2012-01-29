@@ -8,11 +8,11 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Frank L. Quednau")]
 [assembly: AssemblyProduct("Simple.Data.Oracle")]
-[assembly: AssemblyCopyright("Copyright © realfiction 2011")]
+[assembly: AssemblyCopyright("Copyright © realfiction 2012")]
 
 [assembly: ComVisible(false)]
 
-[assembly: AssemblyVersion("0.9.8.0")]
-[assembly: AssemblyFileVersion("0.9.8.0")]
+[assembly: AssemblyVersion("0.12.1.0")]
+[assembly: AssemblyFileVersion("0.12.1.0")]
 
 [assembly: InternalsVisibleTo("Simple.Data.Oracle.Tests")]
