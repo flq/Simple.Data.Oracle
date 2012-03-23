@@ -1,5 +1,7 @@
 using System;
+using System.Transactions;
 using NUnit.Framework;
+using Simple.Data.Ado;
 
 namespace Simple.Data.Oracle.Tests
 {
@@ -113,6 +115,32 @@ namespace Simple.Data.Oracle.Tests
                   DepartmentId: Sequence.Current("DEPARTMENTS_SEQ"));
                 var d = tx.Departments.Find(tx.Departments.Employees.LastName == "Brannigan");
                 Assert.AreEqual("Sky", d.DepartmentName);
+            }
+        }
+
+        [Test]
+        public void TestSequenceInsertUsingSharedConnectionAndTransactionScope()
+        {
+            using (var scope = new TransactionScope(TransactionScopeOption.RequiresNew))
+            {
+                var adapter = _db.GetAdapter() as AdoAdapter;
+                adapter.UseSharedConnection(adapter.ConnectionProvider.CreateConnection());
+
+                _db.Departments.Insert(
+                  DepartmentId: Sequence.Next("DEPARTMENTS_SEQ"),
+                  DepartmentName: "Sky",
+                  ManagerId: 100,
+                  LocationId: 1000);
+                _db.Employees.Insert(
+                  EmployeeId: Sequence.Next("EMPLOYEES_SEQ"),
+                  LastName: "Brannigan",
+                  Email: "awesome@gmail.com",
+                  HireDate: new DateTime(2011, 1, 1),
+                  JobId: "AD_ASST",
+                  DepartmentId: Sequence.Current("DEPARTMENTS_SEQ"));
+                var d = _db.Departments.Find(_db.Departments.Employees.LastName == "Brannigan");
+                Assert.AreEqual("Sky", d.DepartmentName);
+                adapter.StopUsingSharedConnection();
             }
         }
 

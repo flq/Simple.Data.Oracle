@@ -27,7 +27,7 @@ namespace Simple.Data.Oracle
                     {
                         var c = transaction != null
                                     ? transaction.Connection.CreateCommand()
-                                    : adapter.ConnectionProvider.CreateConnection().CreateCommand();
+                                    : adapter.CreateConnection().CreateCommand();
                         return c;
                     };
 
