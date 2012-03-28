@@ -34,7 +34,7 @@ namespace Simple.Data.Oracle.Tests
             var table = TableByName("COUNTRIES");
             var cols = _sql.GetColumns(table).ToList();
             Assert.That(cols, Has.Count.EqualTo(3));
-            Assert.AreEqual("COUNTRY_ID", cols[0].ActualName);
+            Assert.IsTrue(cols.Any(c => c.ActualName == "COUNTRY_ID"), "COUNTRY_ID column is missing");
         }
 
         [Test]
@@ -43,7 +43,7 @@ namespace Simple.Data.Oracle.Tests
             var table = TableByName("EMPLOYEES");
             var cols = _sql.GetColumns(table).ToList();
             Assert.That(cols, Has.Count.EqualTo(11));
-            Assert.AreEqual("JOB_ID", cols[6].ActualName);
+            Assert.IsTrue(cols.Any(c => c.ActualName == "JOB_ID"), "JOB_ID column is missing");
         }
 
         [Test]
