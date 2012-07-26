@@ -129,5 +129,12 @@ namespace Simple.Data.Oracle.Tests
             actual = _db.Employees.QueryByEmployeeId(100).Select(_db.Employees.FirstName).ForUpdate(true).First();
             Assert.AreEqual("Steven", actual.FirstName);
         }
+
+        [Test]
+        public void use_of_length_function()
+        {
+            var result = _db.Employees.QueryByEmployeeId(100).Select(_db.Employees.FirstName.Length().As("NameLength")).First();
+            Assert.AreEqual(6, result.NameLength);
+        }
     }
 }
