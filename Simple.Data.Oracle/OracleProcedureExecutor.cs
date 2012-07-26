@@ -32,29 +32,40 @@ namespace Simple.Data.Oracle
 
         public IEnumerable<ResultSet> Execute(IDictionary<string, object> suppliedParameters)
         {
+            return Execute(suppliedParameters, null);
+        }
+
+        public IEnumerable<ResultSet> Execute(IDictionary<string, object> suppliedParameters, IDbTransaction transaction)
+        {
             var procedure = _schema.FindProcedure(_procedureName);
             if (procedure == null)
             {
                 throw new UnresolvableObjectException(_procedureName.ToString());
             }
 
-            using (var cn = _connectionProvider.CreateOracleConnection())
-            using (var command = cn.CreateCommand())
+            var cn = (transaction == null) ? (IDbConnection)_connectionProvider.CreateOracleConnection() : transaction.Connection;
+            var command = cn.CreateCommand() as OracleCommand;
+            // Double-underscore is used to denote a package name
+            command.CommandText = ResolvePackageCallAndQuote(procedure);
+            command.CommandType = CommandType.StoredProcedure;
+            SetParameters(procedure, command, suppliedParameters);
+            try
             {
-                // Double-underscore is used to denote a package name
-                command.CommandText = ResolvePackageCallAndQuote(procedure);
-                command.CommandType = CommandType.StoredProcedure;
-                SetParameters(procedure, command, suppliedParameters);
-                try
+                var result = _executeImpl(command);
+                suppliedParameters["__ReturnValue"] = command.GetReturnValue();
+                RetrieveOutputParameters(command.Parameters, suppliedParameters);
+                return result;
+            }
+            catch (DbException ex)
+            {
+                throw new AdoAdapterException(ex.Message, command);
+            }
+            finally
+            {
+                command.Dispose();
+                if (transaction == null)
                 {
-                    var result = _executeImpl(command);
-                    suppliedParameters["__ReturnValue"] = command.GetReturnValue();
-                    RetrieveOutputParameters(command.Parameters, suppliedParameters);
-                    return result;
-                }
-                catch (DbException ex)
-                {
-                    throw new AdoAdapterException(ex.Message, command);
+                    cn.Dispose();
                 }
             }
         }

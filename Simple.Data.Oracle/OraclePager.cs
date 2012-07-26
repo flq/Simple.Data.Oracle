@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Text;
+using System.Text.RegularExpressions;
 using Simple.Data.Ado;
 
 namespace Simple.Data.Oracle
@@ -9,6 +10,17 @@ namespace Simple.Data.Oracle
     [Export(typeof(IQueryPager))]
     public class OraclePager : IQueryPager
     {
+
+        /*
+         * For Oracle limits are simply where rownum < take +1 
+         * So these can be applied during custom query building
+         * which is much simpler and does not require sql text parsing
+         */
+        public IEnumerable<string> ApplyLimit(string sql, int take)
+        {
+            yield return sql;
+        }
+
         /*
          *  http://stackoverflow.com/questions/5541455/implement-oracle-paging-for-any-query
          *  SELECT * FROM (
@@ -16,7 +28,6 @@ namespace Simple.Data.Oracle
          *    WHERE ROWNUM <= 500) b 
               WHERE b.RNUM >= 1
          * */
-
         public IEnumerable<string> ApplyPaging(string sql, int skip, int take)
         {
             sql = UpdateWithOrderByIfNecessary(sql);

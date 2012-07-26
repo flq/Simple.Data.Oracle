@@ -120,5 +120,14 @@ namespace Simple.Data.Oracle.Tests
             Assert.AreEqual(10, list.Count);
             Assert.AreEqual(25, count);
         }
+
+        [Test]
+        public void use_of_forUpdate()
+        {
+            var actual = _db.Employees.QueryByEmployeeId(100).Select(_db.Employees.FirstName).ForUpdate(false).First();
+            Assert.AreEqual("Steven", actual.FirstName);
+            actual = _db.Employees.QueryByEmployeeId(100).Select(_db.Employees.FirstName).ForUpdate(true).First();
+            Assert.AreEqual("Steven", actual.FirstName);
+        }
     }
 }
