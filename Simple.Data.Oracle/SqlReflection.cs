@@ -96,8 +96,15 @@ namespace Simple.Data.Oracle
             CreateColumns();
             CreatePrimaryKeys();
             CreateForeignKeys();
-            CreateProcedures();
-            CreateProcedureArguments();
+            try
+            {
+                CreateProcedures();
+                CreateProcedureArguments();
+            }
+            catch
+            {
+                // we are not currently interested in unsupported parameter errors while loading procedures
+            }
         }
 
         private void CreatePrimaryKeys()
