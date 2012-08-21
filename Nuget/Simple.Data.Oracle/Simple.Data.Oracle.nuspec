@@ -2,17 +2,17 @@
 <package xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <metadata xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
     <id>Simple.Data.Oracle</id>
-    <version>0.14.0</version>
-    <authors>Frank Quednau</authors>
-    <owners>Frank Quednau</owners>
+    <version>0.17.0.0</version>
+    <authors>Frank Quednau, Simon Hanlon</authors>
+    <owners>Simon Hanlon</owners>
     <description>Oracle Provider for the Simple.Data data access library.</description> 
-    <projectUrl>http://github.com/flq/Simple.Data.Oracle</projectUrl>
+    <projectUrl>http://github.com/simonH/Simple.Data.Oracle</projectUrl>
     <licenseUrl>http://www.opensource.org/licenses/mit-license.php</licenseUrl>
     <iconUrl>http://simplefx.org/images/simpledata100x100.png</iconUrl>
     <tags>oracle database data ado .net40</tags>
     <language>en-us</language>
     <dependencies>
-      <dependency id="Simple.Data.Ado" version="0.14.0.3" />
+      <dependency id="Simple.Data.Ado" version="0.17.0.1" />
     </dependencies>
   </metadata>
 </package>
