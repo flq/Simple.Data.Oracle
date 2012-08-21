@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
@@ -46,6 +47,33 @@ namespace Simple.Data.Oracle.Tests
             IEnumerable<dynamic> q = _basicQuery.Skip(10).Take(10).ToList<dynamic>();
             Assert.IsNotNull(q);
             Assert.AreEqual(10, q.Count());
+        }
+
+        [Test]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void paging_with_skip_and_forupdate()
+        {
+            _basicQuery.Skip(10).Take(10).ForUpdate(true).ToList<dynamic>();
+        }
+
+        [Test]
+        public void paging_with_forUpdate()
+        {
+            IEnumerable<dynamic> q = _basicQueryWithOrder.Take(10).ForUpdate(true).ToList<dynamic>();
+            Assert.IsNotNull(q);
+            Assert.AreEqual(10, q.Count());
+            Assert.AreEqual("Abel", q.First().LastName);
+            Assert.AreEqual("Bernstein", q.Last().LastName);
+        }
+
+        [Test]
+        public void paging_without_skip_including_where_criteria()
+        {
+            IEnumerable<dynamic> q = _basicQueryWithOrder.Where(new SimpleExpression(_db.Employees.Employee_Id, 500, SimpleExpressionType.LessThan)).Take(10).ToList<dynamic>();
+            Assert.IsNotNull(q);
+            Assert.AreEqual(10, q.Count());
+            Assert.AreEqual("Abel", q.First().LastName);
+            Assert.AreEqual("Bernstein", q.Last().LastName);
         }
     }
 }

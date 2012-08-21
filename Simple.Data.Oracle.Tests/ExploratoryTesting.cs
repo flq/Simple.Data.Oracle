@@ -28,7 +28,7 @@ namespace Simple.Data.Oracle.Tests
         {
             try
             {
-                IEnumerable<dynamic> employees = _db.Employees.FindAll(_db.Employees.Jobs.MinSalary == 20000).OfType<dynamic>();
+                IEnumerable<dynamic> employees = _db.Employees.FindAll(_db.Employees.Jobs.MinSalary > 20000).OfType<dynamic>();
                 Assert.AreEqual(1, employees.Count());
             }
             catch (MissingMethodException x)
@@ -40,9 +40,9 @@ namespace Simple.Data.Oracle.Tests
         [Test]
         public void ordered_employees_by_date_range()
         {
-            List<dynamic> employees = _db.Employees.FindAllByHireDate("1995-01-01".to("1996-01-01")).OrderByHireDateDescending().ToList();
-            Assert.AreEqual(4, employees.Count);
-            Assert.AreEqual(new DateTime(1995, 10, 17), employees[0].HireDate);
+            List<dynamic> employees = _db.Employees.FindAllByHireDate("2001-01-01".to("2002-01-01")).OrderByHireDateDescending().ToList();
+            Assert.AreEqual(1, employees.Count);
+            Assert.AreEqual(new DateTime(2001, 1, 13), employees[0].HireDate);
         }
 
         [Test]
@@ -119,6 +119,22 @@ namespace Simple.Data.Oracle.Tests
             Assert.IsTrue(count.HasValue);
             Assert.AreEqual(10, list.Count);
             Assert.AreEqual(25, count);
+        }
+
+        [Test]
+        public void use_of_forUpdate()
+        {
+            var actual = _db.Employees.QueryByEmployeeId(100).Select(_db.Employees.FirstName).ForUpdate(false).First();
+            Assert.AreEqual("Steven", actual.FirstName);
+            actual = _db.Employees.QueryByEmployeeId(100).Select(_db.Employees.FirstName).ForUpdate(true).First();
+            Assert.AreEqual("Steven", actual.FirstName);
+        }
+
+        [Test]
+        public void use_of_length_function()
+        {
+            var result = _db.Employees.QueryByEmployeeId(100).Select(_db.Employees.FirstName.Length().As("NameLength")).First();
+            Assert.AreEqual(6, result.NameLength);
         }
     }
 }

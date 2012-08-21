@@ -24,7 +24,7 @@ namespace Simple.Data.Oracle.Tests
         [Test]
         public void check_of_returning_statement()
         {
-            var sql = @"insert into regions (region_id, region_name) values (6, 'Antarctica') returning ""REGION_ID"", ""REGION_NAME"", ""CREATE_DATE"" into :p1, :p2, :p3";
+            var sql = @"insert into regions (region_id, region_name) values (6, 'Antarctica') returning ""REGION_ID"", ""REGION_NAME"", ""CREATEDATE"" into :p1, :p2, :p3";
             using (var c = GetCommand(sql))
             {
                 var p1 = c.CreateParameter();
