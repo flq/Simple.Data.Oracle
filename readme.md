@@ -1,4 +1,4 @@
-﻿
+
 #Oracle DataAccess
 
 Since the Oracle access dll from Microsoft is pretty much deprecated you should use the ODAC stuff from Oracle. 
@@ -23,62 +23,62 @@ in the solution and project files. You can switch from Debug/Release configurati
 Tests run against an Oracle 11g XE installation with the pre-installed hr user activated 
 The following columns should be  added to the regions table 
 
-alter table regions add RegionUid RAW(16)
-alter table regions add CreateDate DATE default sysdate
-
+    alter table regions add RegionUid RAW(16)
+    alter table regions add CreateDate DATE default sysdate
+    
 and the following packages / procedures should be added
 
-create or replace
-package Department as 
-  Function department_count return number;
-  Function manager_of_department(dept_name IN VARCHAR2) return VARCHAR2;
-  Procedure Manager_And_Count(dept_name IN VARCHAR2, P_MANAGER OUT VARCHAR2, P_COUNT OUT NUMBER);
-END Department;
-
-create or replace
-PACKAGE BODY  Department AS 
-FUNCTION department_count
-   RETURN NUMBER IS dept_count NUMBER; 
-BEGIN 
-   SELECT count(department_id) 
-      INTO dept_count 
-      FROM hr.departments; 
-   RETURN(dept_count); 
-END; 
-FUNCTION manager_of_department(dept_name In VARCHAR2) 
-   RETURN VARCHAR2 IS 
-      dept_manager VARCHAR2(256); 
-   BEGIN 
-      SELECT employees.last_name 
-         INTO dept_manager 
-         FROM departments, employees
-         where departments.department_name = dept_name and employees.employee_id = departments.manager_id; 
-      RETURN(dept_manager); 
-   END; 
-PROCEDURE Manager_And_Count(dept_name IN VARCHAR2, P_MANAGER OUT VARCHAR2, P_COUNT OUT NUMBER) IS 
-   BEGIN 
-      SELECT employees.last_name 
-         INTO P_MANAGER
-         FROM departments, employees
-         where departments.department_name = dept_name and employees.employee_id = departments.manager_id; 
-      SELECT count(employees.employee_id) 
-         into P_COUNT
-         FROM departments, employees
-         where departments.department_name = dept_name and employees.department_id = departments.department_id; 
-   
-   END; 
-END Department;
-
-create or replace function Employee_Count_Department(dept_name VARCHAR2)
-	RETURN NUMBER IS emp_count NUMBER;
-BEGIN
-      SELECT count(employees.employee_id) 
-         into emp_count
-         FROM departments, employees
-         where departments.department_name = dept_name and employees.department_id = departments.department_id; 
-	RETURN(emp_count);
-END;
-
+    create or replace
+    package Department as 
+      Function department_count return number;
+      Function manager_of_department(dept_name IN VARCHAR2) return VARCHAR2;
+      Procedure Manager_And_Count(dept_name IN VARCHAR2, P_MANAGER OUT VARCHAR2, P_COUNT OUT NUMBER);
+    END Department;
+    
+    create or replace
+    PACKAGE BODY  Department AS 
+    FUNCTION department_count
+       RETURN NUMBER IS dept_count NUMBER; 
+    BEGIN 
+       SELECT count(department_id) 
+          INTO dept_count 
+          FROM hr.departments; 
+       RETURN(dept_count); 
+    END; 
+    FUNCTION manager_of_department(dept_name In VARCHAR2) 
+       RETURN VARCHAR2 IS 
+          dept_manager VARCHAR2(256); 
+       BEGIN 
+          SELECT employees.last_name 
+             INTO dept_manager 
+             FROM departments, employees
+             where departments.department_name = dept_name and employees.employee_id = departments.manager_id; 
+          RETURN(dept_manager); 
+       END; 
+    PROCEDURE Manager_And_Count(dept_name IN VARCHAR2, P_MANAGER OUT VARCHAR2, P_COUNT OUT NUMBER) IS 
+       BEGIN 
+          SELECT employees.last_name 
+             INTO P_MANAGER
+             FROM departments, employees
+             where departments.department_name = dept_name and employees.employee_id = departments.manager_id; 
+          SELECT count(employees.employee_id) 
+             into P_COUNT
+             FROM departments, employees
+             where departments.department_name = dept_name and employees.department_id = departments.department_id; 
+       
+       END; 
+    END Department;
+    
+    create or replace function Employee_Count_Department(dept_name VARCHAR2)
+    	RETURN NUMBER IS emp_count NUMBER;
+    BEGIN
+          SELECT count(employees.employee_id) 
+             into emp_count
+             FROM departments, employees
+             where departments.department_name = dept_name and employees.department_id = departments.department_id; 
+    	RETURN(emp_count);
+    END;
+    
 The connectstring can be found in the "OracleconnectivityContext". It expects a tnsnames entry in the tnsnames.ora file of your choice and that you gave password hr to the user hr.
 
 #TnsNames
