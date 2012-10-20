@@ -13,7 +13,7 @@ namespace Simple.Data.Oracle
     [Export(typeof(ICustomInserter))]
     public class OracleInserter : ICustomInserter
     {
-        public IDictionary<string, object> Insert(AdoAdapter adapter, string tableName, IDictionary<string, object> data, IDbTransaction transaction)
+        public IDictionary<string, object> Insert(AdoAdapter adapter, string tableName, IDictionary<string, object> data, IDbTransaction transaction, bool returnRequired)
         {
             var s = DatabaseSchema.Get(adapter.ConnectionProvider, new ProviderHelper());
             var table = s.FindTable(tableName);
