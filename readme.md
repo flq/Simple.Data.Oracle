@@ -21,6 +21,9 @@ in the solution and project files. You can switch from Debug/Release configurati
 #Tests
 
 Tests run against an Oracle 11g XE installation with the pre-installed hr user activated 
+
+    alter user hr account unlock identified by hr
+
 The following columns should be  added to the regions table 
 
     alter table regions add RegionUid RAW(16)
@@ -70,13 +73,13 @@ and the following packages / procedures should be added
     END Department;
     
     create or replace function Employee_Count_Department(dept_name VARCHAR2)
-    	RETURN NUMBER IS emp_count NUMBER;
+        RETURN NUMBER IS emp_count NUMBER;
     BEGIN
           SELECT count(employees.employee_id) 
              into emp_count
              FROM departments, employees
              where departments.department_name = dept_name and employees.department_id = departments.department_id; 
-    	RETURN(emp_count);
+        RETURN(emp_count);
     END;
     
 The connectstring can be found in the "OracleconnectivityContext". It expects a tnsnames entry in the tnsnames.ora file of your choice and that you gave password hr to the user hr.
