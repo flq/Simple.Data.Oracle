@@ -28,7 +28,7 @@ namespace Simple.Data.Oracle
          *    WHERE ROWNUM <= 500) b 
               WHERE b.RNUM >= 1
          * */
-        public IEnumerable<string> ApplyPaging(string sql, int skip, int take)
+        public IEnumerable<string> ApplyPaging(string sql, string[] keys, int skip, int take)
         {
             sql = UpdateWithOrderByIfNecessary(sql);
             var sb = new StringBuilder();
