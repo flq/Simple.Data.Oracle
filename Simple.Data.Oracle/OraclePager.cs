@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Text;
-using System.Text.RegularExpressions;
 using Simple.Data.Ado;
 
 namespace Simple.Data.Oracle
