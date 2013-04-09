@@ -107,7 +107,7 @@ namespace Simple.Data.Oracle.Tests
         }
 
 
-        [Test,Ignore("Known issue with data type")]
+        [Test]
         public void page_with_total_count()
         {
             Future<int> count;
@@ -118,7 +118,7 @@ namespace Simple.Data.Oracle.Tests
 
             Assert.IsTrue(count.HasValue);
             Assert.AreEqual(10, list.Count);
-            Assert.AreEqual(25, count);
+            Assert.AreEqual(26, count);
         }
 
         [Test]
