@@ -1,0 +1,1 @@
+﻿select object_name, procedure_name from all_procedures where owner=:1

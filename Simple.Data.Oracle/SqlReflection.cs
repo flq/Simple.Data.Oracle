@@ -21,7 +21,7 @@ namespace Simple.Data.Oracle
         private List<Tuple<string, string>> _pks;
         private IEnumerable<ForeignKey> _fks;
         private List<Procedure> _procs;
-        private List<Tuple<string, string, Type, ParameterDirection>> _args;
+        private List<Tuple<string, string, Type, ParameterDirection, string>> _args;
 
         public SqlReflection(OracleConnectionProvider provider)
         {
@@ -76,7 +76,7 @@ namespace Simple.Data.Oracle
             }
         }
 
-        public List<Tuple<string, string, Type, ParameterDirection>> ProcedureArguments
+        public List<Tuple<string, string, Type, ParameterDirection, string>> ProcedureArguments
         {
             get
             {
@@ -182,28 +182,69 @@ namespace Simple.Data.Oracle
             var procedures = _provider.ReaderFrom(SqlLoader.Procedures, 
                 r => r.GetString(0) + (r.IsDBNull(1) ? "" : "__" + r.GetString(1)));
 
-            _procs = (from p in procedures select new Procedure(p, p, Schema)).ToList();
+            _procs = (from p in procedures select new Procedure(p, p, _provider.UserOfConnection.ToUpperInvariant())).ToList();
+
+            if (!Schema.Equals(_provider.UserOfConnection, StringComparison.InvariantCultureIgnoreCase))
+            {
+                procedures = _provider.ReaderFrom(SqlLoader.SchemaProcedures,
+                                        c => c.Parameters.Add("1", Schema.ToUpperInvariant()),
+                                        r => r.GetString(0) + (r.IsDBNull(1) ? "" : "__" + r.GetString(1)));
+                _procs.AddRange((from p in procedures select new Procedure(p, p, Schema.ToUpperInvariant())));
+            }
+        }
+
+        private class ArgDetails 
+        {
+            public string Owner { get; set; }
+            public string ObjectName { get; set; }
+            public string ArgumentName { get; set; }
+            public string DataType { get; set; }
+            public string Direction { get; set; }
         }
 
         private void CreateProcedureArguments()
         {
             var args = _provider.ReaderFrom(SqlLoader.ProcedureArguments,
-                                            c => c.Parameters.Add("1", Schema.ToUpperInvariant()),
-                                            r => new
+                                            c => c.Parameters.Add("1", _provider.UserOfConnection.ToUpperInvariant()),
+                                            r => new ArgDetails
                                                      {
+                                                         Owner = _provider.UserOfConnection.ToUpperInvariant(),
                                                          ObjectName = (r.IsDBNull(1) ? "" : r.GetString(1) + "__") + r.GetString(0),
                                                          ArgumentName = r.IsDBNull(2) ? null : r.GetString(2),
                                                          DataType = r.IsDBNull(3) ? null : r.GetString(3),
                                                          Direction = r.GetString(4)
-                                                     });
-            
-            // For return values, argument name is null
-            _args = (from a in args
-                     where a.DataType != null
-                    let type = a.DataType.ToClrType()
-                    let direction = a.Direction.ToParameterDirection(a.ArgumentName == null)
-                     select Tuple.Create(a.ObjectName, a.ArgumentName ?? "__ReturnValue", type, direction)).ToList();
+                                                     }).ToList();
 
+            if (!Schema.Equals(_provider.UserOfConnection, StringComparison.InvariantCultureIgnoreCase))
+            {
+                args.AddRange(_provider.ReaderFrom(SqlLoader.ProcedureArguments,
+                                                      c => c.Parameters.Add("1", Schema.ToUpperInvariant()),
+                                                      r => new ArgDetails
+                                                          {
+                                                              Owner = Schema.ToUpperInvariant(),
+                                                              ObjectName =
+                                                                  (r.IsDBNull(1) ? "" : r.GetString(1) + "__") +
+                                                                  r.GetString(0),
+                                                              ArgumentName = r.IsDBNull(2) ? null : r.GetString(2),
+                                                              DataType = r.IsDBNull(3) ? null : r.GetString(3),
+                                                              Direction = r.GetString(4)
+                                                          }));
+            }
+            // For return values, argument name is null
+            // try to load as much as we can so we can support as much as possible
+            _args = new List<Tuple<string, string, Type, ParameterDirection, string>>();
+            foreach (var arg in args.Where(a => a.DataType != null))
+            {
+                try
+                {
+                    var type = arg.DataType.ToClrType();
+                    var direction = arg.Direction.ToParameterDirection(arg.ArgumentName == null);
+                    _args.Add(new Tuple<string, string, Type, ParameterDirection, string>(arg.ObjectName, arg.ArgumentName ?? "__ReturnValue", type, direction, arg.Owner));
+                }
+                catch
+                {
+                }
+            }
         }
     }
 }

@@ -31,6 +31,11 @@ namespace Simple.Data.Oracle.ReflectionSql
             get { return LoadFile("procedures.txt"); }
         }
 
+        public static string SchemaProcedures
+        {
+            get { return LoadFile("procedures_for_schema.txt");  }
+        }
+
         public static string ProcedureArguments
         {
             get { return LoadFile("procedure_args.txt"); }

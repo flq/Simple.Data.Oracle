@@ -8,6 +8,7 @@ namespace Simple.Data.Oracle
     /// Relevant information:
     /// http://download.oracle.com/docs/html/B14164_01/featOraCommand.htm#i1007424
     /// http://www.devart.com/dotconnect/oracle/docs/DataTypeMapping.html
+    /// Treat UNDEFINED as a string because XMLTYPE parameters are stored in ALL_ARGUMENTS with a DATA_TYPE of UNDEFINED
     /// </summary>
     public static class DbTypeConverter
     {
@@ -39,6 +40,7 @@ namespace Simple.Data.Oracle
                     {"INTERVAL DAY TO SECOND", DbType.Time},
                     {"RAW", DbType.Binary},
                     {"RAW(16)", DbType.Guid},
+                    {"UNDEFINED", DbType.String}
                 };
 
         private static readonly Dictionary<string, Type> _dbToClr =
@@ -69,6 +71,7 @@ namespace Simple.Data.Oracle
                     {"INTERVAL DAY TO SECOND", typeof (DateTime)},
                     {"REF CURSOR", typeof (object)},
                     {"PL/SQL BOOLEAN", typeof (bool)},
+                    {"UNDEFINED", typeof(string)}
                 };
 
         public static DbType FromDataType(string dataType)

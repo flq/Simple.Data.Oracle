@@ -44,7 +44,7 @@ namespace Simple.Data.Oracle
         public IEnumerable<Parameter> GetParameters(Procedure storedProcedure)
         {
             var parameters = _sqlReflection.ProcedureArguments
-                .Where(p => p.Item1.InvariantEquals(storedProcedure.Name))
+                .Where(p => p.Item1.InvariantEquals(storedProcedure.Name) && p.Item5.InvariantEquals(storedProcedure.Schema))
                 .Select(p => new Parameter(p.Item2, p.Item3, p.Item4));
             return parameters;
         }
