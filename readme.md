@@ -18,6 +18,21 @@ in the solution and project files. You can switch from Debug/Release configurati
 - Definition of a compile flag **DEVART**
 - Referencing the corresponding devart assemblies which need to be in the lib folder
 
+#Schema Configuration
+The default schema can be configured by adding an application setting with the key "Simple.Data.Oracle.Schema".
+
+	<appSettings>
+		<add key="Simple.Data.Oracle.Schema" value="CUSTOMSCHEMA" />    
+	</appSettings>
+
+Advanced customization of the schema can be configured by creating a class the implements ISchemaConfiguration in an assembly named Simple.Data.*
+
+	[Export(typeof(ISchemaConfiguration))]
+	public class MyCustomSchemaConfiguration : ISchemaConfiguration
+	{
+		public string Schema { get { return "ANYTHINGYOUWANT"; } }
+	}
+
 #Tests
 
 Tests run against an Oracle 11g XE installation with the pre-installed hr user activated 
@@ -28,7 +43,25 @@ The following columns should be  added to the regions table
 
     alter table regions add RegionUid RAW(16)
     alter table regions add CreateDate DATE default sysdate
-    
+
+The following user should be added
+
+    -- USER SQL
+	CREATE USER hr_other IDENTIFIED BY hr_other
+	DEFAULT TABLESPACE USERS
+	TEMPORARY TABLESPACE TEMP
+	ACCOUNT UNLOCK;
+
+	-- ROLES
+	GRANT CONNECT TO hr_other;
+
+	grant select on HR.REGIONS to hr_other;
+	grant select on HR.DEPARTMENTS to hr_other;
+	grant select on HR.EMPLOYEES to hr_other;
+	grant select on HR.JOB_HISTORY to hr_other;
+	grant select on HR.JOBS to hr_other;
+	grant select on HR.LOCATIONS to hr_other;
+
 and the following packages / procedures should be added
 
     create or replace

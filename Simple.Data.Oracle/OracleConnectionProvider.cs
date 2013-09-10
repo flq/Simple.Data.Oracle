@@ -17,7 +17,7 @@ namespace Simple.Data.Oracle
     #endif
     internal class OracleConnectionProvider : IConnectionProvider
     {
-
+     
         public void SetConnectionString(string connectionString)
         {
             ConnectionString = connectionString;
@@ -30,8 +30,14 @@ namespace Simple.Data.Oracle
 
         public ISchemaProvider GetSchemaProvider()
         {
-            return new OracleSchemaProvider(this);
+            if( SchemaConfiguration == null)
+                SchemaConfiguration = new DefaultSchemaConfiguration(this);
+
+            return new OracleSchemaProvider(this, SchemaConfiguration);
         }
+
+        [Import(AllowDefault = true)]
+        public ISchemaConfiguration SchemaConfiguration { get; set; }
 
         public string GetIdentityFunction()
         {

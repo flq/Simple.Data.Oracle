@@ -168,6 +168,8 @@
   <ItemGroup>
     <Compile Include="DbTypeConverter.cs" />
     <Compile Include="DbDictionary.cs" />
+    <Compile Include="DefaultSchemaConfiguration.cs" />
+    <Compile Include="ISchemaConfiguration.cs" />
     <Compile Include="OracleConnectionProvider.cs" />
     <Compile Include="OracleCustomQueryBuilder.cs" />
     <Compile Include="OracleFunctionNameConverter.cs" />

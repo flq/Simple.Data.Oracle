@@ -23,10 +23,10 @@ namespace Simple.Data.Oracle
         private List<Procedure> _procs;
         private List<Tuple<string, string, Type, ParameterDirection, string>> _args;
 
-        public SqlReflection(OracleConnectionProvider provider)
+        public SqlReflection(OracleConnectionProvider provider, ISchemaConfiguration schemaConfiguration)
         {
             _provider = provider;
-            _schema = ConfigurationManager.AppSettings.AllKeys.Contains("Simple.Data.Oracle.Schema") ? ConfigurationManager.AppSettings["Simple.Data.Oracle.Schema"] : provider.UserOfConnection;
+            _schema = schemaConfiguration.Schema;
             _buildData = new Task(BuildData);
             _buildData.Start();
         }
