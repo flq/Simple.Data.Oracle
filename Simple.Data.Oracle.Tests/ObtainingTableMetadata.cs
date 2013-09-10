@@ -78,7 +78,6 @@ namespace Simple.Data.Oracle.Tests
             var fks = _sql.GetForeignKeys(table).ToList();
             Assert.That(fks, Has.Count.EqualTo(3));
         }
-
-
+        
     }
 }

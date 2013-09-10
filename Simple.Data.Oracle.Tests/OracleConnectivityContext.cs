@@ -50,12 +50,14 @@ namespace Simple.Data.Oracle.Tests
 
         protected SqlReflection GetSqlReflection()
         {
-            return new SqlReflection(GetConnectionProvider());
+            var connectionProvider = GetConnectionProvider();
+            return new SqlReflection(connectionProvider, new DefaultSchemaConfiguration(connectionProvider));
         }
 
         protected OracleSchemaProvider GetSchemaProvider()
         {
-            var schemaProvider = new OracleSchemaProvider(GetConnectionProvider());
+            var connectionProvider = GetConnectionProvider();
+            var schemaProvider = new OracleSchemaProvider(connectionProvider, new DefaultSchemaConfiguration(connectionProvider));
             Tables = schemaProvider.GetTables().ToList();
             return schemaProvider;
         }

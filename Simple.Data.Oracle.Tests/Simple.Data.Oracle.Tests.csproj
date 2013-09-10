@@ -171,6 +171,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BasicConnectivity.cs" />
+    <Compile Include="CustomSchemaConfigurationConnectivity.cs" />
     <Compile Include="ExploratoryTesting.cs" />
     <Compile Include="GuidInsertionTests.cs" />
     <Compile Include="InsertTests.cs" />
