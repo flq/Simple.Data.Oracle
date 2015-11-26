@@ -31,8 +31,7 @@ namespace Simple.Data.Oracle
                         return c;
                     };
 
-            IDbCommand cmd;
-            using (cmd = ConstructCommand(tuples, table.QualifiedName, command))
+            using (var cmd = ConstructCommand(tuples, table.QualifiedName, command))
             {
                 cmd.WriteTrace();
                 cmd.Connection.TryOpen();
@@ -41,6 +40,9 @@ namespace Simple.Data.Oracle
                 foreach (var it in tuples.Values)
                     returnData.Add(it.SimpleDataColumn, NormalizeReturningValue((IDbDataParameter)cmd.Parameters[it.ReturningParameterName]));
                 data = returnData;
+
+                if (cmd.Connection.State == ConnectionState.Open)
+                    cmd.Connection.Close();
             }
 
             return data;
